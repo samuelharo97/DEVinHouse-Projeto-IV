@@ -1,10 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Address } from './address.entity';
 
 @Entity({ name: 'user' })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 100, nullable: false })
   fullName: string;
@@ -29,6 +30,9 @@ export class User {
 
   @Column({ nullable: false, default: true })
   is_active: boolean;
+
+  @OneToOne(() => Address, (address) => address.user)
+  userAddress: Address;
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

@@ -12,7 +12,9 @@ import { Match } from 'src/core/constraints/match.decorator';
 import { userAddressDto } from './user-address.dto';
 
 export class CreateUserDto {
+  @IsString()
   @IsEmail()
+  @MaxLength(30)
   email: string;
 
   @IsString()
