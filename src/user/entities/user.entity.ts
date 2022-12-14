@@ -12,7 +12,10 @@ export class User {
   @Column({ length: 75, unique: true, nullable: false })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    default: 'https://connectlab.netlify.app/profile.png',
+  })
   photoUrl: string;
 
   @Column({ nullable: true })
@@ -23,6 +26,9 @@ export class User {
 
   @Column({ nullable: false })
   salt: string;
+
+  @Column({ nullable: false, default: true })
+  is_active: boolean;
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
