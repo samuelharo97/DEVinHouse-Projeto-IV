@@ -7,11 +7,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn'],
   });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
-    .setTitle('DevIn[Intelbras]')
-    .setDescription('Módulo 2 - NestJS')
+    .setTitle('ConnectLab Server')
+    .setDescription("API to handle ConnectLab's frontend requests")
     .setVersion('1.0')
     .build();
 
