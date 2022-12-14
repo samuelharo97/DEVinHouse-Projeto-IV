@@ -97,4 +97,8 @@ export class AuthService {
       }
     });
   }
+
+  decodedToken(jwtToken: string) {
+    return this.jwtService.decode(jwtToken);
+  }
 }
