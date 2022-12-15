@@ -8,6 +8,7 @@ import { JwtStrategy } from './core/auth/guards/strategy/jwt.strategy';
 import { databaseProviders } from './core/database/database.providers';
 import { UserModule } from './user/user.module';
 import { userProviders } from './user/user.providers';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { userProviders } from './user/user.providers';
       },
     }),
     UserModule,
+    DeviceModule,
   ],
   controllers: [AppController],
   providers: [
