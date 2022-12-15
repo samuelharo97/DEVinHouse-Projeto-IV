@@ -1,8 +1,14 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Address } from './address.entity';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'user_connectlab' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -14,7 +20,6 @@ export class User {
   email: string;
 
   @Column({
-    nullable: true,
     default: 'https://connectlab.netlify.app/profile.png',
   })
   photoUrl: string;

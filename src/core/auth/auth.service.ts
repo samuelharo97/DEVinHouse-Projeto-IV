@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Address } from 'src/user/entities/address.entity';
@@ -12,35 +12,43 @@ import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    @Inject('USER_REPOSITORY')
     private userRepo: Repository<User>,
+    @Inject('ADDRESS_REPOSITORY')
     private addressRepo: Repository<Address>,
   ) {}
 
-  createUser(createUser: CreateUserDto): Promise<User> {
+  createUser(createUser: CreateUserDto): Promise<any> {
     return new Promise(async (resolve) => {
       const { fullName, email, photoUrl, phone, userAddress, password } =
         createUser;
+
       const newUser = this.userRepo.create();
+      const newAddress = this.addressRepo.create();
 
       newUser.fullName = fullName;
       newUser.email = email;
-      newUser.photoUrl = photoUrl;
+      newUser.photoUrl = photoUrl || newUser.photoUrl;
       newUser.phone = phone;
       newUser.salt = await bcrypt.genSalt(12);
       newUser.password = await this.hashPassword(password, newUser.salt);
-      newUser.userAddress.city = userAddress.city;
-      newUser.userAddress.zipCode = userAddress.zipCode;
-      newUser.userAddress.neighborhood = userAddress.neighborhood;
-      newUser.userAddress.number = userAddress.number;
-      newUser.userAddress.street = userAddress.street;
-      newUser.userAddress.state = userAddress.state;
-      newUser.userAddress.complement = userAddress.complement;
+      newAddress.city = userAddress.city;
+      newAddress.zipCode = userAddress.zipCode;
+      newAddress.neighborhood = userAddress.neighborhood;
+      newAddress.number = userAddress.number;
+      newAddress.street = userAddress.street;
+      newAddress.state = userAddress.state;
+      newAddress.complement = userAddress.complement;
 
       const user = await this.userRepo.save(newUser);
+
+      newAddress.user = user.id;
+
+      const address = await this.addressRepo.save(newAddress);
       delete user.password;
       delete newUser.salt;
 
-      resolve(user);
+      resolve({ user, address });
     });
   }
 

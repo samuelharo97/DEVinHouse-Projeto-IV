@@ -7,14 +7,14 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'address_connectlab' })
 export class Address {
   @PrimaryGeneratedColumn()
   id: number;
 
   @OneToOne(() => User, (user) => user.userAddress, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: string;
 
   @Column({ nullable: false })
   zipCode: string;
