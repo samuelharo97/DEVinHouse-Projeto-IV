@@ -1,10 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Address } from './address.entity';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'user_connectlab' })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 100, nullable: false })
   fullName: string;
@@ -13,7 +20,6 @@ export class User {
   email: string;
 
   @Column({
-    nullable: true,
     default: 'https://connectlab.netlify.app/profile.png',
   })
   photoUrl: string;
@@ -29,6 +35,9 @@ export class User {
 
   @Column({ nullable: false, default: true })
   is_active: boolean;
+
+  @OneToOne(() => Address, (address) => address.user)
+  userAddress: Address;
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
