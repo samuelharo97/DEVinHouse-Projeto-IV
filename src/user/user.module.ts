@@ -5,11 +5,12 @@ import { databaseProviders } from 'src/core/database/database.providers';
 import { userProviders } from './user.providers';
 import { AuthService } from 'src/core/auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
+import { deviceProviders } from 'src/device/device.providers';
 
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'jb2KURr1O89JjfcvCPIZkh3qQQ',
+      secret: process.env.JWT_SECRET,
       signOptions: {
         expiresIn: 60 * 6 * 4,
       },
@@ -19,6 +20,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
   providers: [
     ...databaseProviders,
     ...userProviders,
+    ...deviceProviders,
     UserService,
     AuthService,
     JwtService,

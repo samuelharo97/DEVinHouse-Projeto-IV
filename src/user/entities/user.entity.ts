@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Address } from './address.entity';
 
@@ -30,7 +36,8 @@ export class User {
   @Column({ nullable: false, default: true })
   is_active: boolean;
 
-  @OneToOne(() => Address, (address) => address.user)
+  @OneToOne(() => Address, (address) => address.user, { cascade: true })
+  @JoinColumn({ name: 'address_id' })
   userAddress: Address;
 
   async checkPassword(password: string): Promise<boolean> {

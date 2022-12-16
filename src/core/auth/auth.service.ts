@@ -32,6 +32,7 @@ export class AuthService {
       newUser.phone = phone;
       newUser.salt = await bcrypt.genSalt(12);
       newUser.password = await this.hashPassword(password, newUser.salt);
+      newUser.userAddress = newAddress;
       newAddress.city = userAddress.city;
       newAddress.zipCode = userAddress.zipCode;
       newAddress.neighborhood = userAddress.neighborhood;
@@ -41,14 +42,11 @@ export class AuthService {
       newAddress.complement = userAddress.complement;
 
       const user = await this.userRepo.save(newUser);
-
-      newAddress.user = user.id;
-
-      const address = await this.addressRepo.save(newAddress);
+      await this.addressRepo.save(newAddress);
       delete user.password;
       delete newUser.salt;
 
-      resolve({ user, address });
+      resolve({ user });
     });
   }
 

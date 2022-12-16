@@ -12,9 +12,8 @@ export class Address {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User, (user) => user.userAddress, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' })
-  user: string;
+  @OneToOne(() => User, (user) => user.userAddress)
+  user: User;
 
   @Column({ nullable: false })
   zipCode: string;

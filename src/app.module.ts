@@ -9,6 +9,7 @@ import { databaseProviders } from './core/database/database.providers';
 import { UserModule } from './user/user.module';
 import { userProviders } from './user/user.providers';
 import { DeviceModule } from './device/device.module';
+import { deviceProviders } from './device/device.providers';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { DeviceModule } from './device/device.module';
       isGlobal: true,
     }),
     JwtModule.register({
-      secret: 'jb2KURr1O89JjfcvCPIZkh3qQQ',
+      secret: process.env.JWT_SECRET,
       signOptions: {
         expiresIn: 60 * 6 * 4,
       },
@@ -29,6 +30,7 @@ import { DeviceModule } from './device/device.module';
   providers: [
     ...databaseProviders,
     ...userProviders,
+    ...deviceProviders,
     AppService,
     AuthService,
     JwtStrategy,

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './core/auth/auth.service';
 import { CredentialsDTO } from './core/auth/dto/credentials.dto';
 import { CreateUserDto } from './user/dto/create-user.dto';
@@ -9,9 +16,13 @@ export class AppController {
 
   @Post('/auth/register')
   async signUp(@Body() createUserDto: CreateUserDto) {
-    const newUser = await this.authService.signUp(createUserDto);
+    try {
+      const newUser = await this.authService.signUp(createUserDto);
 
-    return newUser;
+      return newUser;
+    } catch (err) {
+      throw new HttpException({ reason: err?.detail }, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('/auth/login')
