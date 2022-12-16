@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Address } from './entities/address.entity';
 import { User } from './entities/user.entity';
