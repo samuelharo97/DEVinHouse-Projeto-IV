@@ -5,7 +5,9 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 @Injectable()
 export class DeviceService {
   create(createDeviceDto: CreateDeviceDto) {
-    return 'This action adds a new device';
+    return new Promise(async (resolve, reject) => {
+      const { type, info, madeBy, name, photoUrl } = createDeviceDto;
+    });
   }
 
   findAll() {
