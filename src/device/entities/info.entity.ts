@@ -1,8 +1,17 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserDevice } from './user.devices.entity';
 
 @Entity('device_info_connectlab')
 export class DeviceInfo {
+  @PrimaryGeneratedColumn()
+  id: string;
+
   @Column()
   mac_address: string;
 
