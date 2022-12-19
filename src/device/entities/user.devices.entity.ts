@@ -21,9 +21,9 @@ export class UserDevice {
   @Column()
   user_id: string;
 
-  @Column()
+  @Column({ array: true, default: [] })
   @ManyToOne(() => Device, (device) => device._id, { onDelete: 'SET NULL' })
-  device_id: Device[];
+  device_id: number;
 
   @Column()
   settings_id: string;

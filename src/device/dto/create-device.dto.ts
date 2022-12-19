@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -8,9 +9,6 @@ import {
 import { DeviceInfoDto } from './device-info.dto';
 
 export class CreateDeviceDto {
-  @IsNotEmpty()
-  _id: string;
-
   @IsNotEmpty()
   name: string;
 
@@ -23,9 +21,9 @@ export class CreateDeviceDto {
   @IsNotEmpty()
   photoUrl: string;
 
-  @ValidateNested({ each: true })
+  /* @ValidateNested({ each: true })
   @IsObject()
   @IsNotEmptyObject()
   @Type(() => DeviceInfoDto)
-  info: DeviceInfoDto;
+  info: DeviceInfoDto; */
 }

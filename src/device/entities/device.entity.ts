@@ -5,7 +5,7 @@ import { UserDevice } from './user.devices.entity';
 export class Device {
   @PrimaryGeneratedColumn('increment')
   @OneToMany(() => UserDevice, (userDevice) => userDevice.device_id)
-  _id: string;
+  _id: number;
 
   @Column()
   name: string;

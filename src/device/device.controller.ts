@@ -6,28 +6,47 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
 } from '@nestjs/common';
+import { HttpException } from '@nestjs/common/exceptions';
 import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { Device } from './entities/device.entity';
 
 @Controller('device')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  @Post()
-  create(@Body() createDeviceDto: CreateDeviceDto) {
+  @Post('/new')
+  create(@Body() createDeviceDto: CreateDeviceDto): Promise<Device> {
     return this.deviceService.create(createDeviceDto);
   }
 
   @Get()
-  findAll() {
-    return this.deviceService.findAll();
+  findAll(): Promise<Device[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const devices = await this.deviceService.findAll();
+        resolve(devices);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.deviceService.findOne(+id);
+  @Get(':_id')
+  async findOne(@Param('_id') _id: number) {
+    const id = Number(_id);
+
+    try {
+      return await this.deviceService.findOne(id);
+    } catch (error) {
+      throw new HttpException(
+        { message: 'bad request' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Patch(':id')
