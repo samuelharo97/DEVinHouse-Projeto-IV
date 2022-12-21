@@ -12,7 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

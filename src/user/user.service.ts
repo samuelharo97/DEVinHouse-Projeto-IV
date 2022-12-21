@@ -57,11 +57,43 @@ export class UserService {
   update(id: string, updateUserDto: UpdateUserDto) {
     return new Promise(async (resolve, reject) => {
       try {
-        const user = await this.userRepo.findOneBy({
-          id: id,
+        const user = await this.userRepo.findOne({
+          where: { id: id },
+          relations: { userAddress: true },
         });
+
+        const { fullName, email, phone, photoUrl, userAddress } = updateUserDto;
+        const {
+          city,
+          neighborhood,
+          state,
+          zipCode,
+          number,
+          street,
+          complement,
+        } = userAddress;
+
+        user.email = email || user.email;
+        user.fullName = fullName || user.fullName;
+        user.phone = phone || user.phone;
+        user.photoUrl = photoUrl || user.photoUrl;
+        user.userAddress.city = city || user.userAddress.city;
+        user.userAddress.complement = complement || user.userAddress.complement;
+        user.userAddress.neighborhood =
+          neighborhood || user.userAddress.neighborhood;
+        user.userAddress.number = number || user.userAddress.number;
+        user.userAddress.state = state || user.userAddress.state;
+        user.userAddress.street = street || user.userAddress.street;
+        user.userAddress.zipCode = zipCode || user.userAddress.zipCode;
+
+        const updatedUser = await this.userRepo.save(user);
+
+        delete updatedUser.password;
+        delete updatedUser.salt;
+
+        resolve(updatedUser);
       } catch (err) {
-        console.log(err);
+        reject(err);
       }
     });
   }
