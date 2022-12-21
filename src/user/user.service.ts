@@ -20,6 +20,7 @@ export class UserService {
 
   async findAll() {
     const users = await this.userRepo.find({
+      where: { is_active: true },
       relations: {
         userAddress: true,
       },
@@ -53,7 +54,7 @@ export class UserService {
 
         resolve(user);
       } catch (error) {
-        resolve(console.log(error));
+        reject(console.log(error));
       }
     });
   }
@@ -62,7 +63,21 @@ export class UserService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(param: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userRepo.findOneBy({
+          id: param,
+        });
+
+        user.is_active = !user.is_active;
+
+        this.userRepo.save(user);
+
+        resolve(user);
+      } catch (error) {
+        reject(console.log(error));
+      }
+    });
   }
 }

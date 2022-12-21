@@ -6,14 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  Inject,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository } from 'typeorm';
-import { Address } from './entities/address.entity';
-import { User } from './entities/user.entity';
-
+import { UseGuards } from '@nestjs/common/decorators';
+import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -35,6 +33,6 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }
