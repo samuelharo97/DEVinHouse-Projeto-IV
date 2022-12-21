@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class userAddressDto {
   @IsString()
@@ -26,5 +26,6 @@ export class userAddressDto {
   state: string;
 
   @IsString()
+  @IsOptional()
   complement?: string;
 }
