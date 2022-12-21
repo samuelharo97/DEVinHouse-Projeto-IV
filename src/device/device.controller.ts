@@ -14,7 +14,7 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Device } from './entities/device.entity';
 
-@Controller('device')
+@Controller('devices')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 

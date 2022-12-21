@@ -1,4 +1,9 @@
-import { Inject, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Address } from './entities/address.entity';
@@ -132,10 +137,11 @@ export class UserService {
           throw new NotFoundException();
         }
 
+        //onDelete: 'CASCADE' didn't work so I had to do this
         const address = user.userAddress;
         await this.addressRepo.remove(address);
-
         await this.userRepo.remove(user);
+        // --------------------------------------------------------------
 
         resolve({ acknowledged: true, deletedCount: 1 });
       } catch (error) {
