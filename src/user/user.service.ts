@@ -15,7 +15,7 @@ export class UserService {
 
   async findAll() {
     const users = await this.userRepo.find({
-      where: { is_active: true },
+      /* where: { is_active: true }, */
       relations: {
         userAddress: true,
       },
@@ -54,11 +54,19 @@ export class UserService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, updateUserDto: UpdateUserDto) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userRepo.findOneBy({
+          id: id,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
   }
 
-  remove(param: string) {
+  toggleBlock(param: string) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userRepo.findOneBy({
