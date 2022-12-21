@@ -70,7 +70,7 @@ export class AuthService {
       email: user.email,
     };
     const token = await this.jwtService.sign(jwtPayload);
-    return { token };
+    return { token, user };
   }
 
   async checkCredentials(credentials: CredentialsDTO) {
@@ -78,10 +78,16 @@ export class AuthService {
     const user = await this.userRepo.findOne({
       where: {
         email: email,
+        is_active: true,
+      },
+      relations: {
+        userAddress: true,
       },
     });
 
     if (user && (await user.checkPassword(password))) {
+      delete user.password;
+      delete user.salt;
       return user;
     }
     return null;

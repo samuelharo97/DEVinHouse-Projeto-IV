@@ -50,7 +50,7 @@ export class DeviceService {
         });
         res(device);
       } catch (err) {
-        res(err);
+        rej(err);
       }
     });
   }
