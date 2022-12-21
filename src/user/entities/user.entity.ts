@@ -36,7 +36,10 @@ export class User {
   @Column({ nullable: false, default: true })
   is_active: boolean;
 
-  @OneToOne(() => Address, (address) => address.user, { cascade: true })
+  @OneToOne(() => Address, (address) => address.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'address_id' })
   userAddress: Address;
 

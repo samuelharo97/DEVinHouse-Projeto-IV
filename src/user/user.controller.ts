@@ -31,8 +31,13 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
-  @Delete('/block/:id')
-  remove(@Param('id') id: string) {
+  @Patch('/block/:id')
+  block(@Param('id') id: string) {
     return this.userService.toggleBlock(id);
+  }
+
+  @Delete('/:id')
+  remove(@Param('id') id: string) {
+    return this.userService.remove(id);
   }
 }

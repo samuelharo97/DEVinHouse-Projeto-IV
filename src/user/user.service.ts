@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Address } from './entities/address.entity';
@@ -112,6 +112,34 @@ export class UserService {
         resolve(user);
       } catch (error) {
         reject(console.log(error));
+      }
+    });
+  }
+
+  remove(id: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userRepo.findOne({
+          where: {
+            id: id,
+          },
+          relations: {
+            userAddress: true,
+          },
+        });
+
+        if (!user) {
+          throw new NotFoundException();
+        }
+
+        const address = user.userAddress;
+        await this.addressRepo.remove(address);
+
+        await this.userRepo.remove(user);
+
+        resolve({ acknowledged: true, deletedCount: 1 });
+      } catch (error) {
+        reject(error);
       }
     });
   }
