@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserDevice } from './user.devices.entity';
+import { UserDevice } from '../../user-devices/entities/user.devices.entity';
 
 @Entity('device_info_connectlab')
 export class DeviceInfo {

@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserDevice } from './user.devices.entity';
+import { UserDevice } from '../../user-devices/entities/user.devices.entity';
 
 @Entity('device_connectlab')
 export class Device {

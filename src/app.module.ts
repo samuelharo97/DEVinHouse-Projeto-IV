@@ -10,6 +10,8 @@ import { UserModule } from './user/user.module';
 import { userProviders } from './user/user.providers';
 import { DeviceModule } from './device/device.module';
 import { deviceProviders } from './device/device.providers';
+import { UserDevicesModule } from './user-devices/user-devices.module';
+import { userDevices } from './user-devices/user-device.providers';
 
 @Module({
   imports: [
@@ -25,12 +27,14 @@ import { deviceProviders } from './device/device.providers';
     }),
     UserModule,
     DeviceModule,
+    UserDevicesModule,
   ],
   controllers: [AppController],
   providers: [
     ...databaseProviders,
     ...userProviders,
     ...deviceProviders,
+    ...userDevices,
     AppService,
     AuthService,
     JwtStrategy,

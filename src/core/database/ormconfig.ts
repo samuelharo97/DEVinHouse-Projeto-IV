@@ -11,8 +11,10 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   entities: [
     __dirname + '/../../user/**/*.entity{.ts,.js}',
+    '/../../user-devices/**/*.entity{.ts,.js}',
     '/../../device/**/*.entity{.ts,.js}',
     'dist/user/**/*.entity.js',
+    'dist/user-devices/**/*.entity.js',
     'dist/device/**/*.entity.js',
   ],
   migrations: [
