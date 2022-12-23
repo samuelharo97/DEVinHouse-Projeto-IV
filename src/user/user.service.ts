@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Address } from './entities/address.entity';
@@ -54,7 +49,7 @@ export class UserService {
 
         resolve(user);
       } catch (error) {
-        reject(console.log(error));
+        reject(error);
       }
     });
   }

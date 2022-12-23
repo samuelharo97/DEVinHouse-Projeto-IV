@@ -22,7 +22,7 @@ import { userDevices } from './user-devices/user-device.providers';
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: 60 * 6 * 4,
+        expiresIn: 1728000,
       },
     }),
     UserModule,
