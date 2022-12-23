@@ -7,6 +7,7 @@ import { Repository } from 'typeorm/repository/Repository';
 import { CredentialsDTO } from './dto/credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
+import { ChangePasswordDto } from 'src/user/dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -112,5 +113,26 @@ export class AuthService {
 
   decodedToken(jwtToken: string) {
     return this.jwtService.decode(jwtToken);
+  }
+
+  async modifyPassword(changePasswordDto: ChangePasswordDto) {
+    const { email, old_password, new_password } = changePasswordDto;
+    const credentials = { email, password: old_password };
+
+    const user = await this.checkCredentials(credentials);
+
+    if (!user) {
+      throw new UnauthorizedException('E-mail e/ou senha incorretos');
+    }
+
+    user.salt = await bcrypt.genSalt(12);
+    user.password = await this.hashPassword(new_password, user.salt);
+
+    await this.userRepo.save(user);
+
+    delete user.password;
+    delete user.salt;
+
+    return { message: `password changed successfully` };
   }
 }

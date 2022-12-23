@@ -1,6 +1,6 @@
-import { DeviceInfo } from 'src/device/entities/info.entity';
-import { DeviceSettings } from 'src/device/entities/settings.entity';
+import { DeviceInfo } from 'src/user-devices/entities/info.entity';
 import { DataSource } from 'typeorm';
+import { DeviceSettings } from './entities/settings.entity';
 import { UserDevice } from './entities/user.devices.entity';
 
 export const userDevices = [

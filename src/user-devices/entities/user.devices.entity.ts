@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Device } from '../../device/entities/device.entity';
-import { DeviceInfo } from '../../device/entities/info.entity';
-import { DeviceSettings } from '../../device/entities/settings.entity';
+import { DeviceInfo } from './info.entity';
+import { DeviceSettings } from './settings.entity';
 
 @Entity('user_device_connectlab')
 export class UserDevice {

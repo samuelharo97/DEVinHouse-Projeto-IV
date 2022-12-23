@@ -4,8 +4,8 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import { FindOneDto } from './dto/find-one.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Device } from './entities/device.entity';
-import { DeviceInfo } from './entities/info.entity';
-import { DeviceSettings } from './entities/settings.entity';
+import { DeviceInfo } from '../user-devices/entities/info.entity';
+import { DeviceSettings } from '../user-devices/entities/settings.entity';
 
 @Injectable()
 export class DeviceService {

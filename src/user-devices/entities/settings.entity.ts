@@ -5,8 +5,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Local } from '../enum/location.enum';
-import { UserDevice } from '../../user-devices/entities/user.devices.entity';
+import { Local } from '../../device/enum/location.enum';
+import { UserDevice } from './user.devices.entity';
 
 @Entity('device_settings_connectlab')
 export class DeviceSettings {
