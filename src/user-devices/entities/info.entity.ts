@@ -29,12 +29,18 @@ export class DeviceInfo {
   @JoinColumn({ name: 'user_device_id' })
   user_device_id: UserDevice;
 
-  generateMAC() {
+  addMAC() {
     if (this.mac_address == null) {
       const macAddress = 'XX:XX:XX:XX:XX:XX'.replace(/X/g, function () {
         return '0123456789ABCDEF'.charAt(Math.floor(Math.random() * 16));
       });
       this.mac_address = macAddress;
+    }
+  }
+
+  addVirtual() {
+    if (this.virtual_id == null) {
+      this.virtual_id = randomBytes(3).toString('hex');
     }
   }
 }
