@@ -98,14 +98,32 @@ export class UserService {
     });
   }
 
-  toggleBlock(param: string) {
+  block(param: string) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userRepo.findOneBy({
           id: param,
         });
 
-        user.is_active = !user.is_active;
+        user.is_active = false;
+
+        this.userRepo.save(user);
+
+        resolve(user);
+      } catch (error) {
+        reject(console.log(error));
+      }
+    });
+  }
+
+  unblock(param: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userRepo.findOneBy({
+          id: param,
+        });
+
+        user.is_active = true;
 
         this.userRepo.save(user);
 
