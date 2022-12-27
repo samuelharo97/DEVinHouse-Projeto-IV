@@ -41,11 +41,11 @@ export class UserService {
     return filteredUsers;
   }
 
-  findOne(param: string) {
+  findOne(userId: string) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userRepo.findOneBy({
-          id: param,
+          id: userId,
         });
 
         if (!user.phone) {
@@ -59,11 +59,11 @@ export class UserService {
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(userId: string, updateUserDto: UpdateUserDto) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userRepo.findOne({
-          where: { id: id },
+          where: { id: userId },
           relations: { userAddress: true },
         });
 
