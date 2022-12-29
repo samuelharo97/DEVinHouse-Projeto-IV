@@ -15,20 +15,22 @@ import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 
-@Controller('user-devices')
+@Controller('userDevices')
 export class UserDevicesController {
   constructor(private readonly userDevicesService: UserDevicesService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(
+  async create(
     @Req() request: Request,
     @Body() createUserDeviceDto: CreateUserDeviceDto,
   ) {
-    return this.userDevicesService.create(
+    const device = await this.userDevicesService.create(
       request.user['id'],
       createUserDeviceDto,
     );
+    console.log(device);
+    return device;
   }
 
   @Get()

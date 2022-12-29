@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Device } from 'src/device/entities/device.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, getRepository, Repository } from 'typeorm';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { DeviceInfo } from './entities/info.entity';
@@ -18,10 +19,78 @@ export class UserDevicesService {
     private settingsRepo: Repository<DeviceSettings>,
     @Inject('INFO_REPOSITORY')
     private infoRepo: Repository<DeviceInfo>,
+    @Inject('DEVICE_REPOSITORY')
+    private deviceRepo: Repository<Device>,
   ) {}
 
-  create(userId: string, createUserDeviceDto: CreateUserDeviceDto) {
-    return 'This action adds a new userDevice';
+  async create(userId: string, dto: CreateUserDeviceDto) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { device_id, info, settings } = dto;
+
+        const user: User = await this.userRepo.findOne({
+          where: { id: userId },
+        });
+        const device: Device = await this.deviceRepo.findOne({
+          where: { _id: device_id },
+        });
+
+        const deviceInstance = this.userDeviceRepo.create(); // id property doesn't exist yet, only after save
+        const deviceInfoInstance = this.infoRepo.create();
+        const deviceSettingsInstance = this.settingsRepo.create();
+
+        deviceInstance.device = { device };
+        deviceInstance.user_id = userId;
+
+        const savedUserDevice = await this.userDeviceRepo.save(deviceInstance);
+
+        deviceInfoInstance.mac_address
+          ? (deviceInfoInstance.mac_address = info.mac_address)
+          : (deviceInfoInstance.mac_address = deviceInfoInstance.addMAC());
+
+        deviceInfoInstance.virtual_id
+          ? (deviceInfoInstance.virtual_id = info.virtual_id)
+          : (deviceInfoInstance.virtual_id = deviceInfoInstance.addVirtual());
+
+        deviceInfoInstance.ip_address
+          ? (deviceInfoInstance.ip_address = info.ip_address)
+          : (deviceInfoInstance.ip_address = '127.0.0.1');
+
+        deviceInfoInstance.signal
+          ? (deviceInfoInstance.signal = info.signal)
+          : (deviceInfoInstance.signal = null);
+
+        deviceSettingsInstance.is_on = settings.is_on;
+        deviceSettingsInstance.location = settings.location;
+        deviceSettingsInstance.room = settings.room;
+
+        const savedSettings = await this.settingsRepo.save(
+          deviceSettingsInstance,
+        );
+
+        const savedInfo = await this.infoRepo.save(deviceInfoInstance);
+
+        savedUserDevice.info = savedInfo;
+        savedUserDevice.settings = savedSettings;
+
+        console.log('here');
+        console.log(savedUserDevice);
+
+        console.log(savedUserDevice);
+
+        console.log('four', savedUserDevice.id);
+
+        user.addUserDeviceId(savedUserDevice.id);
+
+        await this.userRepo.save(user);
+        console.log('almost');
+        const finished = await this.userDeviceRepo.save(savedUserDevice);
+
+        resolve({ finished });
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   findAll() {

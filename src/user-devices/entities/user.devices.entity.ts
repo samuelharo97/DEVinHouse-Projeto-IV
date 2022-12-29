@@ -1,7 +1,9 @@
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
-  ManyToOne,
+  JoinColumn,
+  ManyToOne as ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -12,22 +14,34 @@ import { DeviceSettings } from './settings.entity';
 @Entity('user_device_connectlab')
 export class UserDevice {
   @PrimaryGeneratedColumn('uuid')
-  @OneToOne(() => DeviceSettings, (settings) => settings.user_device_id, {
-    onDelete: 'CASCADE',
-  })
-  @OneToOne(() => DeviceInfo, (info) => info.user_device_id)
   id: string;
 
-  @Column()
+  @Column('varchar', { unique: false })
+  @ManyToMany(() => User, (user) => user.devices, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'user_id' })
   user_id: string;
 
-  @Column({ array: true, default: [] })
-  @ManyToOne(() => Device, (device) => device._id, { onDelete: 'SET NULL' })
-  device_id: number;
+  @Column('jsonb', { unique: false })
+  device: object;
 
-  @Column()
-  settings_id: string;
+  @OneToOne(() => DeviceSettings, (settings) => settings.id, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'settings_id' })
+  settings: DeviceSettings;
 
-  @Column()
-  info_id: string;
+  @OneToOne(() => DeviceInfo, (info) => info.id, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'info_id' })
+  info: DeviceInfo;
+
+  /* addDevice(device: any) {
+    if (this.device == null) {
+      this.device = new Array<Device>();
+    }
+    this.device.push(device);
+  } */
 }

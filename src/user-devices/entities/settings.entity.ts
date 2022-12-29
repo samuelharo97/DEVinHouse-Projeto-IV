@@ -1,20 +1,13 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Local } from '../enum/location.enum';
 import { UserDevice } from './user.devices.entity';
 
 @Entity('device_settings_connectlab')
 export class DeviceSettings {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
-  @OneToOne(() => UserDevice, (device) => device.id)
-  @JoinColumn({ name: 'user_device_id' })
+  @OneToOne(() => UserDevice, (device) => device.settings)
   user_device_id: UserDevice;
 
   @Column({ default: false })

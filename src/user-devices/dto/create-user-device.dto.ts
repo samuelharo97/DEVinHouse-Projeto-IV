@@ -1,12 +1,14 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsObject, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import { DeviceInfoDto } from './device-info.dto';
 import { DeviceSettingsDto } from './device-settings.dto';
 
 export class CreateUserDeviceDto {
-  @IsNotEmpty()
-  user_id: string;
-
   @IsNotEmpty()
   device_id: number;
 
@@ -16,6 +18,7 @@ export class CreateUserDeviceDto {
   settings: DeviceSettingsDto;
 
   @ValidateNested({ each: true })
+  @IsOptional()
   @IsObject()
   @Type(() => DeviceInfoDto)
   info: DeviceInfoDto;

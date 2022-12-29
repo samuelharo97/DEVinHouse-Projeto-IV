@@ -1,4 +1,4 @@
-import { IsIP, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsIP, IsOptional, IsString } from 'class-validator';
 
 export class DeviceInfoDto {
   @IsOptional()
@@ -14,6 +14,6 @@ export class DeviceInfoDto {
   mac_address: string;
 
   @IsOptional()
-  @IsNumber()
-  signal: number;
+  @IsString()
+  signal: string;
 }

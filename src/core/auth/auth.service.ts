@@ -27,6 +27,7 @@ export class AuthService {
       const newUser = this.userRepo.create();
       const newAddress = this.addressRepo.create();
 
+      newUser.devices = [];
       newUser.fullName = fullName;
       newUser.email = email;
       newUser.photoUrl = photoUrl || newUser.photoUrl;
