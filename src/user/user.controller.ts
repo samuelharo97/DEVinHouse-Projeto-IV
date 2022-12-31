@@ -54,7 +54,12 @@ export class UserController {
 
   @Patch('/block/:id')
   block(@Param('id') id: string) {
-    return this.userService.toggleBlock(id);
+    return this.userService.block(id);
+  }
+
+  @Patch('/unblock/:id')
+  unblock(@Param('id') id: string) {
+    return this.userService.unblock(id);
   }
 
   @Delete('/:id')

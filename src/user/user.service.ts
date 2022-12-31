@@ -39,13 +39,18 @@ export class UserService {
   findOne(userId: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        const user = await this.userRepo.findOneBy({
-          id: userId,
+        const user = await this.userRepo.findOne({
+          where: {
+            id: userId,
+          },
+          relations: { userAddress: true },
         });
 
         if (!user.phone) {
           delete user.phone;
         }
+        delete user.salt;
+        delete user.password;
 
         resolve(user);
       } catch (error) {
@@ -98,20 +103,38 @@ export class UserService {
     });
   }
 
-  toggleBlock(param: string) {
+  block(param: string) {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userRepo.findOneBy({
           id: param,
         });
 
-        user.is_active = !user.is_active;
+        user.is_active = false;
 
         this.userRepo.save(user);
 
         resolve(user);
       } catch (error) {
-        reject(console.log(error));
+        reject(error);
+      }
+    });
+  }
+
+  unblock(param: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userRepo.findOneBy({
+          id: param,
+        });
+
+        user.is_active = true;
+
+        this.userRepo.save(user);
+
+        resolve(user);
+      } catch (error) {
+        reject(error);
       }
     });
   }

@@ -43,8 +43,21 @@ export class User {
   @JoinColumn({ name: 'address_id' })
   userAddress: Address;
 
+  @Column('character varying', {
+    array: true,
+    default: [],
+  })
+  devices: string[];
+
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
+  }
+
+  addUserDeviceId(userDeviceId: string) {
+    if (!this.devices) {
+      this.devices = new Array<string>();
+    }
+    this.devices.push(userDeviceId);
   }
 }

@@ -6,18 +6,30 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
+import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
+import { Request } from 'express';
 
-@Controller('user-devices')
+@Controller('userDevices')
 export class UserDevicesController {
   constructor(private readonly userDevicesService: UserDevicesService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createUserDeviceDto: CreateUserDeviceDto) {
-    return this.userDevicesService.create(createUserDeviceDto);
+  async create(
+    @Req() request: Request,
+    @Body() createUserDeviceDto: CreateUserDeviceDto,
+  ) {
+    const device = await this.userDevicesService.create(
+      request.user['id'],
+      createUserDeviceDto,
+    );
+    return device;
   }
 
   @Get()
@@ -25,9 +37,14 @@ export class UserDevicesController {
     return this.userDevicesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userDevicesService.findOne(+id);
+  @Get('/:id')
+  async findUserDevices(@Param() param: string) {
+    return await this.userDevicesService.findUserDevices(param['id']);
+  }
+
+  @Get('/details/:id')
+  async deviceDetails(@Param('id') param: string) {
+    return await this.userDevicesService.findOne(param);
   }
 
   @Patch(':id')

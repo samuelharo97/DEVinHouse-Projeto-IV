@@ -1,10 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserDevice } from '../../user-devices/entities/user.devices.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('device_connectlab')
 export class Device {
   @PrimaryGeneratedColumn('increment')
-  @OneToMany(() => UserDevice, (userDevice) => userDevice.device_id)
   _id: number;
 
   @Column()

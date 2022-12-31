@@ -6,7 +6,7 @@ import {
   IsObject,
   ValidateNested,
 } from 'class-validator';
-import { DeviceInfoDto } from './device-info.dto';
+import { DeviceInfoDto } from '../../user-devices/dto/device-info.dto';
 
 export class CreateDeviceDto {
   @IsNotEmpty()
