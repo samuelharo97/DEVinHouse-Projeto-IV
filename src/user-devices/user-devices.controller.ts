@@ -38,14 +38,14 @@ export class UserDevicesController {
   }
 
   @Get('/:id')
-  async findUserDevices(@Param() request: string) {
-    return await this.userDevicesService.findUserDevices(request['id']);
+  async findUserDevices(@Param() param: string) {
+    return await this.userDevicesService.findUserDevices(param['id']);
   }
 
-  /*  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userDevicesService.findOne(+id);
-  } */
+  @Get('/details/:id')
+  async deviceDetails(@Param('id') param: string) {
+    return await this.userDevicesService.findOne(param);
+  }
 
   @Patch(':id')
   update(

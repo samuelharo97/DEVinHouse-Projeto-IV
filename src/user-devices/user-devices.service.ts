@@ -86,12 +86,16 @@ export class UserDevicesService {
     });
   }
 
-  findAll() {
-    return `This action returns all userDevices`;
+  async findAll() {
+    return await this.userDeviceRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userDevice`;
+  async findOne(deviceId: string) {
+    const device = await this.userDeviceRepo.findOne({
+      where: { id: deviceId },
+    });
+
+    return device;
   }
 
   async findUserDevices(userId: string) {
