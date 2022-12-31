@@ -93,6 +93,7 @@ export class UserDevicesService {
   async findOne(deviceId: string) {
     const device = await this.userDeviceRepo.findOne({
       where: { id: deviceId },
+      relations: { settings: true, info: true },
     });
 
     return device;
