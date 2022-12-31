@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Device } from 'src/device/entities/device.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -113,7 +113,28 @@ export class UserDevicesService {
     return `This action updates a #${id} userDevice`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userDevice`;
+  remove(id: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const userDevice = await this.userDeviceRepo.findOne({
+          where: { id: id },
+          relations: { info: true, settings: true },
+        });
+
+        if (!userDevice) {
+          throw new NotFoundException();
+        }
+        const info = userDevice.info;
+        const settings = userDevice.settings;
+
+        await this.settingsRepo.remove(settings);
+        await this.infoRepo.remove(info);
+        await this.userDeviceRepo.remove(userDevice);
+
+        resolve({ acknowledged: true, deletedCount: 1 });
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 }

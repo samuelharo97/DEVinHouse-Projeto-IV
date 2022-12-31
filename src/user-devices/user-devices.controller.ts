@@ -57,6 +57,10 @@ export class UserDevicesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userDevicesService.remove(+id);
+    try {
+      return this.userDevicesService.remove(id);
+    } catch (error) {
+      return error;
+    }
   }
 }
