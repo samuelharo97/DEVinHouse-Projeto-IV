@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Device } from 'src/device/entities/device.entity';
 import { User } from 'src/user/entities/user.entity';
-import { createQueryBuilder, getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { DeviceInfo } from './entities/info.entity';
@@ -30,7 +30,11 @@ export class UserDevicesService {
 
         const user: User = await this.userRepo.findOne({
           where: { id: userId },
+          relations: {
+            devices: true,
+          },
         });
+
         const device: Device = await this.deviceRepo.findOne({
           where: { _id: device_id },
         });
@@ -39,10 +43,8 @@ export class UserDevicesService {
         const deviceInfoInstance = this.infoRepo.create();
         const deviceSettingsInstance = this.settingsRepo.create();
 
-        deviceInstance.device = { device };
+        deviceInstance.device = device;
         deviceInstance.user_id = userId;
-
-        const savedUserDevice = await this.userDeviceRepo.save(deviceInstance);
 
         deviceInfoInstance.mac_address
           ? (deviceInfoInstance.mac_address = info.mac_address)
@@ -70,23 +72,18 @@ export class UserDevicesService {
 
         const savedInfo = await this.infoRepo.save(deviceInfoInstance);
 
-        savedUserDevice.info = savedInfo;
-        savedUserDevice.settings = savedSettings;
+        deviceInstance.info = savedInfo;
+        deviceInstance.settings = savedSettings;
 
-        console.log('here');
-        console.log(savedUserDevice);
+        const savedUserDevice = await this.userDeviceRepo.save(deviceInstance);
 
-        console.log(savedUserDevice);
-
-        console.log('four', savedUserDevice.id);
-
-        user.addUserDeviceId(savedUserDevice.id);
+        user.devices.push(
+          savedUserDevice.id,
+        ); /* [user.devices, ...savedUserDevice.id]; */
 
         await this.userRepo.save(user);
-        console.log('almost');
-        const finished = await this.userDeviceRepo.save(savedUserDevice);
 
-        resolve({ finished });
+        resolve(savedUserDevice);
       } catch (error) {
         reject(error);
       }

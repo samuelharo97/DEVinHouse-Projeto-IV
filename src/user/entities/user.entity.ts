@@ -4,10 +4,10 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Address } from './address.entity';
-import { OneToMany as ManyToMany } from 'typeorm/decorator/relations/OneToMany';
 import { UserDevice } from 'src/user-devices/entities/user.devices.entity';
 
 @Entity({ name: 'user_connectlab' })
@@ -45,9 +45,12 @@ export class User {
   @JoinColumn({ name: 'address_id' })
   userAddress: Address;
 
-  @Column('varchar')
-  @ManyToMany(() => UserDevice, (userDevice) => userDevice.user_id, {
-    cascade: true,
+  /*   @Column('character varying', {
+    array: true,
+    nullable: true,
+  }) */
+  @OneToMany(() => UserDevice, (userDevice) => userDevice.id, {
+    eager: true,
   })
   devices: string[];
 
@@ -56,11 +59,10 @@ export class User {
     return hash === this.password;
   }
 
-  addUserDeviceId(userDeviceId: string) {
-    console.log('userdeviceID', userDeviceId);
+  addUserDeviceId(userDeviceId: any) {
     if (this.devices == null) {
-      this.devices = new Array<string>();
+      this.devices = new Array<any>();
     }
-    this.devices.push(...userDeviceId);
+    this.devices.push(userDeviceId);
   }
 }

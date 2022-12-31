@@ -3,22 +3,21 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne as ManyToMany,
+  ManyToMany,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Device } from '../../device/entities/device.entity';
 import { DeviceInfo } from './info.entity';
 import { DeviceSettings } from './settings.entity';
 
 @Entity('user_device_connectlab')
 export class UserDevice {
   @PrimaryGeneratedColumn('uuid')
+  @ManyToOne(() => User, (user) => user.devices)
   id: string;
 
-  @Column('varchar', { unique: false })
-  @ManyToMany(() => User, (user) => user.devices, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'user_id' })
+  @Column('varchar')
   user_id: string;
 
   @Column('jsonb', { unique: false })
