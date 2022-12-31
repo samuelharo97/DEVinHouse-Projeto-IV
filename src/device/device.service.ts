@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateDeviceDto } from './dto/create-device.dto';
-import { FindOneDto } from './dto/find-one.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Device } from './entities/device.entity';
 import { DeviceInfo } from '../user-devices/entities/info.entity';

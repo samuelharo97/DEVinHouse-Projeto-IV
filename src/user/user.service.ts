@@ -39,13 +39,18 @@ export class UserService {
   findOne(userId: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        const user = await this.userRepo.findOneBy({
-          id: userId,
+        const user = await this.userRepo.findOne({
+          where: {
+            id: userId,
+          },
+          relations: { userAddress: true },
         });
 
         if (!user.phone) {
           delete user.phone;
         }
+        delete user.salt;
+        delete user.password;
 
         resolve(user);
       } catch (error) {

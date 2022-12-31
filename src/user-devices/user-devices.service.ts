@@ -30,9 +30,6 @@ export class UserDevicesService {
 
         const user: User = await this.userRepo.findOne({
           where: { id: userId },
-          relations: {
-            devices: true,
-          },
         });
 
         const device: Device = await this.deviceRepo.findOne({
@@ -76,11 +73,11 @@ export class UserDevicesService {
         deviceInstance.settings = savedSettings;
 
         const savedUserDevice = await this.userDeviceRepo.save(deviceInstance);
-
-        user.devices.push(
+        user.addUserDeviceId(
           savedUserDevice.id,
         ); /* [user.devices, ...savedUserDevice.id]; */
 
+        console.log(user.devices, 'userdevices');
         await this.userRepo.save(user);
 
         resolve(savedUserDevice);

@@ -1,10 +1,7 @@
-import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -14,7 +11,6 @@ import { DeviceSettings } from './settings.entity';
 @Entity('user_device_connectlab')
 export class UserDevice {
   @PrimaryGeneratedColumn('uuid')
-  @ManyToOne(() => User, (user) => user.devices)
   id: string;
 
   @Column('varchar')
@@ -36,11 +32,4 @@ export class UserDevice {
   })
   @JoinColumn({ name: 'info_id' })
   info: DeviceInfo;
-
-  /* addDevice(device: any) {
-    if (this.device == null) {
-      this.device = new Array<Device>();
-    }
-    this.device.push(device);
-  } */
 }
