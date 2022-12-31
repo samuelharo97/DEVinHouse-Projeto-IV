@@ -37,10 +37,15 @@ export class UserDevicesController {
     return this.userDevicesService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
+  async findUserDevices(@Param() request: string) {
+    return await this.userDevicesService.findUserDevices(request['id']);
+  }
+
+  /*  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userDevicesService.findOne(+id);
-  }
+  } */
 
   @Patch(':id')
   update(

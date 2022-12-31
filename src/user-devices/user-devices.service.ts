@@ -94,6 +94,16 @@ export class UserDevicesService {
     return `This action returns a #${id} userDevice`;
   }
 
+  async findUserDevices(userId: string) {
+    const devices = await this.userDeviceRepo.find({
+      where: { user_id: userId },
+    });
+
+    /*     const userDevices = devices.filter((device) => device.user_id == userId);
+     */
+    return devices;
+  }
+
   update(id: number, updateUserDeviceDto: UpdateUserDeviceDto) {
     return `This action updates a #${id} userDevice`;
   }
