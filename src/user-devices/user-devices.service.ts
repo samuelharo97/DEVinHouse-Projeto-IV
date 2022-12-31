@@ -77,7 +77,6 @@ export class UserDevicesService {
           savedUserDevice.id,
         ); /* [user.devices, ...savedUserDevice.id]; */
 
-        console.log(user.devices, 'userdevices');
         await this.userRepo.save(user);
 
         resolve(savedUserDevice);

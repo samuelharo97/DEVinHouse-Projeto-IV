@@ -116,7 +116,7 @@ export class UserService {
 
         resolve(user);
       } catch (error) {
-        reject(console.log(error));
+        reject(error);
       }
     });
   }
@@ -134,7 +134,7 @@ export class UserService {
 
         resolve(user);
       } catch (error) {
-        reject(console.log(error));
+        reject(error);
       }
     });
   }

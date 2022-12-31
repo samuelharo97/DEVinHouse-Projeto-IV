@@ -29,7 +29,6 @@ export class UserDevicesController {
       request.user['id'],
       createUserDeviceDto,
     );
-    console.log(device);
     return device;
   }
 
