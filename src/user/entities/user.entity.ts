@@ -2,11 +2,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Address } from './address.entity';
+import { UserDevice } from 'src/user-devices/entities/user.devices.entity';
 
 @Entity({ name: 'user_connectlab' })
 export class User {
@@ -43,21 +46,20 @@ export class User {
   @JoinColumn({ name: 'address_id' })
   userAddress: Address;
 
-  @Column('character varying', {
-    array: true,
-    default: [],
+  @OneToMany(() => UserDevice, (userDevice) => userDevice.user, {
+    persistence: true,
   })
-  devices: string[];
+  devices: UserDevice[];
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
   }
 
-  addUserDeviceId(userDeviceId: string) {
+  addUserDevice(userDevice: UserDevice) {
     if (!this.devices) {
-      this.devices = new Array<string>();
+      this.devices = new Array<UserDevice>();
     }
-    this.devices.push(userDeviceId);
+    this.devices.push(userDevice);
   }
 }

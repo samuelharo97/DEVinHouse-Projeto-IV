@@ -41,6 +41,7 @@ export class AuthService {
       newAddress.street = userAddress.street;
       newAddress.state = userAddress.state;
       newAddress.complement = userAddress.complement;
+      newUser.devices = [];
 
       const user = await this.userRepo.save(newUser);
       await this.addressRepo.save(newAddress);

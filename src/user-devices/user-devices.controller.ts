@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Req,
+  Request as typeormReq,
+  /* Request, */
 } from '@nestjs/common';
 import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
@@ -22,11 +24,11 @@ export class UserDevicesController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(
-    @Req() request: Request,
+    @typeormReq() request,
     @Body() createUserDeviceDto: CreateUserDeviceDto,
   ) {
     const device = await this.userDevicesService.create(
-      request.user['id'],
+      request.user,
       createUserDeviceDto,
     );
     return device;
@@ -37,9 +39,11 @@ export class UserDevicesController {
     return this.userDevicesService.findAll();
   }
 
-  @Get('/:id')
-  async findUserDevices(@Param() param: string) {
-    return await this.userDevicesService.findUserDevices(param['id']);
+  @UseGuards(JwtAuthGuard)
+  @Get('/all')
+  async findUserDevices(@typeormReq() request) {
+    console.log(request.user['id']);
+    return await this.userDevicesService.findUserDevices(request.user['id']);
   }
 
   @Get('/details/:id')
@@ -57,6 +61,10 @@ export class UserDevicesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userDevicesService.remove(+id);
+    try {
+      return this.userDevicesService.remove(id);
+    } catch (error) {
+      return error;
+    }
   }
 }

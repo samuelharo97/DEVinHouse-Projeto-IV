@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { UserDevice } from 'src/user-devices/entities/user.devices.entity';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Address } from './entities/address.entity';
@@ -11,6 +12,8 @@ export class UserService {
     private userRepo: Repository<User>,
     @Inject('ADDRESS_REPOSITORY')
     private addressRepo: Repository<Address>,
+    @Inject('USER_DEVICE_REPOSITORY')
+    private userDeviceRepo: Repository<UserDevice>,
   ) {}
 
   async findAll() {
@@ -148,6 +151,7 @@ export class UserService {
           },
           relations: {
             userAddress: true,
+            devices: true,
           },
         });
 
@@ -157,6 +161,9 @@ export class UserService {
 
         //onDelete: 'CASCADE' didn't work so I had to do this
         const address = user.userAddress;
+        const devices = user.devices;
+
+        await this.userDeviceRepo.remove(devices);
         await this.addressRepo.remove(address);
         await this.userRepo.remove(user);
         // --------------------------------------------------------------
