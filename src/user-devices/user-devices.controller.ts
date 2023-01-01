@@ -42,7 +42,6 @@ export class UserDevicesController {
   @UseGuards(JwtAuthGuard)
   @Get('/all')
   async findUserDevices(@typeormReq() request) {
-    console.log(request.user['id']);
     return await this.userDevicesService.findUserDevices(request.user['id']);
   }
 

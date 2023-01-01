@@ -116,8 +116,6 @@ export class UserDevicesService {
       loadRelationIds: { relations: ['user'] },
     });
 
-    devices.forEach((device) => console.log(device.user));
-
     const filtered = devices.filter((device) => device.user == user);
 
     return filtered;
