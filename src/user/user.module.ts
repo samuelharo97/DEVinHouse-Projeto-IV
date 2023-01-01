@@ -6,6 +6,7 @@ import { userProviders } from './user.providers';
 import { AuthService } from 'src/core/auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { deviceProviders } from 'src/device/device.providers';
+import { userDeviceProviders } from 'src/user-devices/user-device.providers';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { deviceProviders } from 'src/device/device.providers';
     ...databaseProviders,
     ...userProviders,
     ...deviceProviders,
+    ...userDeviceProviders,
     UserService,
     AuthService,
     JwtService,

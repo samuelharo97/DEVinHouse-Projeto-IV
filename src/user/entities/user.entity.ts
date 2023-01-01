@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -46,7 +47,7 @@ export class User {
   userAddress: Address;
 
   @OneToMany(() => UserDevice, (userDevice) => userDevice.user, {
-    onDelete: 'CASCADE',
+    persistence: true,
   })
   devices: UserDevice[];
 

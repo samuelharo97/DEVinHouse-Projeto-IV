@@ -5,7 +5,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,9 +16,8 @@ export class UserDevice {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.id, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'user' })
-  user: string;
+  @ManyToOne(() => User, (user) => user.devices)
+  user: User;
 
   @Column('jsonb', { unique: false })
   device: Device;
@@ -37,4 +35,11 @@ export class UserDevice {
   })
   @JoinColumn({ name: 'info_id' })
   info: DeviceInfo;
+
+  /* addDevice(userDevice: Device) {
+    if (!this.device) {
+      this.device = new Array<Device>();
+    }
+    this.device.push(userDevice);
+  } */
 }

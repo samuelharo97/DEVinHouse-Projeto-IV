@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Device } from 'src/device/entities/device.entity';
 import { User } from 'src/user/entities/user.entity';
+import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
 import { Repository } from 'typeorm';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
@@ -23,25 +24,36 @@ export class UserDevicesService {
     private deviceRepo: Repository<Device>,
   ) {}
 
-  async create(userId: string, dto: CreateUserDeviceDto) {
+  async create(userPayload: JwtPayloadUser, dto: CreateUserDeviceDto) {
     return new Promise(async (resolve, reject) => {
       try {
         const { device_id, info, settings } = dto;
 
-        const user: User = await this.userRepo.findOne({
+        /* const user: User = await this.userRepo.findOne({
           where: { id: userId },
-        });
+        }); */
+
+        const user = this.userRepo.create(userPayload);
+
+        if (!user) {
+          throw new NotFoundException();
+        }
 
         const device: Device = await this.deviceRepo.findOne({
           where: { _id: device_id },
         });
+
+        if (!device) {
+          throw new NotFoundException();
+        }
 
         const deviceInstance = this.userDeviceRepo.create(); // id property doesn't exist yet, only after save
         const deviceInfoInstance = this.infoRepo.create();
         const deviceSettingsInstance = this.settingsRepo.create();
 
         deviceInstance.device = device;
-        deviceInstance.user = user.id;
+
+        deviceInstance.user = user;
 
         deviceInfoInstance.mac_address
           ? (deviceInfoInstance.mac_address = info.mac_address)
@@ -72,14 +84,11 @@ export class UserDevicesService {
         deviceInstance.info = savedInfo;
         deviceInstance.settings = savedSettings;
 
-        const savedUserDevice = await this.userDeviceRepo.save(deviceInstance);
-        user.addUserDevice(
-          savedUserDevice,
-        ); /* [user.devices, ...savedUserDevice.id]; */
+        /* [user.devices, ...savedUserDevice.id]; */
 
         await this.userRepo.save(user);
 
-        resolve(savedUserDevice);
+        resolve(await this.userDeviceRepo.save(deviceInstance));
       } catch (error) {
         reject(error);
       }
@@ -101,15 +110,17 @@ export class UserDevicesService {
     return device;
   }
 
-  async findUserDevices(userId: string) {
+  async findUserDevices(user: User) {
     const devices = await this.userDeviceRepo.find({
-      /*       where: { user_id: userId },
-       */
+      relations: { settings: true, info: true, user: true },
+      loadRelationIds: { relations: ['user'] },
     });
 
-    /*     const userDevices = devices.filter((device) => device.user_id == userId);
-     */
-    return devices;
+    devices.forEach((device) => console.log(device.user));
+
+    const filtered = devices.filter((device) => device.user == user);
+
+    return filtered;
   }
 
   update(id: number, updateUserDeviceDto: UpdateUserDeviceDto) {
