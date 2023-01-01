@@ -11,7 +11,7 @@ import { userProviders } from './user/user.providers';
 import { DeviceModule } from './device/device.module';
 import { deviceProviders } from './device/device.providers';
 import { UserDevicesModule } from './user-devices/user-devices.module';
-import { userDevices } from './user-devices/user-device.providers';
+import { userDeviceProviders } from './user-devices/user-device.providers';
 
 @Module({
   imports: [
@@ -34,7 +34,7 @@ import { userDevices } from './user-devices/user-device.providers';
     ...databaseProviders,
     ...userProviders,
     ...deviceProviders,
-    ...userDevices,
+    ...userDeviceProviders,
     AppService,
     AuthService,
     JwtStrategy,

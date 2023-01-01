@@ -41,7 +41,7 @@ export class UserDevicesService {
         const deviceSettingsInstance = this.settingsRepo.create();
 
         deviceInstance.device = device;
-        deviceInstance.user_id = userId;
+        deviceInstance.user = user.id;
 
         deviceInfoInstance.mac_address
           ? (deviceInfoInstance.mac_address = info.mac_address)
@@ -73,8 +73,8 @@ export class UserDevicesService {
         deviceInstance.settings = savedSettings;
 
         const savedUserDevice = await this.userDeviceRepo.save(deviceInstance);
-        user.addUserDeviceId(
-          savedUserDevice.id,
+        user.addUserDevice(
+          savedUserDevice,
         ); /* [user.devices, ...savedUserDevice.id]; */
 
         await this.userRepo.save(user);
@@ -87,7 +87,9 @@ export class UserDevicesService {
   }
 
   async findAll() {
-    return await this.userDeviceRepo.find();
+    return await this.userDeviceRepo.find({
+      relations: { settings: true, info: true },
+    });
   }
 
   async findOne(deviceId: string) {
@@ -101,7 +103,8 @@ export class UserDevicesService {
 
   async findUserDevices(userId: string) {
     const devices = await this.userDeviceRepo.find({
-      where: { user_id: userId },
+      /*       where: { user_id: userId },
+       */
     });
 
     /*     const userDevices = devices.filter((device) => device.user_id == userId);

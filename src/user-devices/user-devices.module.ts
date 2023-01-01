@@ -4,7 +4,7 @@ import { UserDevicesController } from './user-devices.controller';
 import { databaseProviders } from 'src/core/database/database.providers';
 import { deviceProviders } from 'src/device/device.providers';
 import { userProviders } from 'src/user/user.providers';
-import { userDevices } from './user-device.providers';
+import { userDeviceProviders } from './user-device.providers';
 
 @Module({
   controllers: [UserDevicesController],
@@ -13,7 +13,7 @@ import { userDevices } from './user-device.providers';
     ...databaseProviders,
     ...userProviders,
     ...deviceProviders,
-    ...userDevices,
+    ...userDeviceProviders,
   ],
 })
 export class UserDevicesModule {}
