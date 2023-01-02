@@ -19,7 +19,7 @@ export class DeviceInfo {
   @Column({ nullable: true })
   signal: string;
 
-  @OneToOne(() => UserDevice, (device) => device.info)
+  @OneToOne(() => UserDevice, (device) => device.info, { onDelete: 'CASCADE' })
   user_device_id: UserDevice;
 
   addMAC() {

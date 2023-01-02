@@ -13,6 +13,10 @@ import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 
 @Controller('userDevices')
 export class UserDevicesController {
@@ -44,7 +48,14 @@ export class UserDevicesController {
 
   @Get('/details/:id')
   async deviceDetails(@Param('id') param: string) {
-    return await this.userDevicesService.findOne(param);
+    try {
+      const result = await this.userDevicesService.findOne(param);
+      if (!result) {
+        throw new BadRequestException();
+      }
+    } catch (error) {
+      return error;
+    }
   }
 
   @Patch(':id')

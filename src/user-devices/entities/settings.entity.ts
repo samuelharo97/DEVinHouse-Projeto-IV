@@ -7,7 +7,9 @@ export class DeviceSettings {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @OneToOne(() => UserDevice, (device) => device.settings)
+  @OneToOne(() => UserDevice, (device) => device.settings, {
+    onDelete: 'CASCADE',
+  })
   user_device_id: UserDevice;
 
   @Column({ default: false })

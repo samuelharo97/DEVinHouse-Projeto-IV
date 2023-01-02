@@ -1,4 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { DeviceInfo } from 'src/user-devices/entities/info.entity';
+import { DeviceSettings } from 'src/user-devices/entities/settings.entity';
 import { UserDevice } from 'src/user-devices/entities/user.devices.entity';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +16,10 @@ export class UserService {
     private addressRepo: Repository<Address>,
     @Inject('USER_DEVICE_REPOSITORY')
     private userDeviceRepo: Repository<UserDevice>,
+    @Inject('INFO_REPOSITORY')
+    private infoRepo: Repository<DeviceInfo>,
+    @Inject('SETTINGS_REPOSITORY')
+    private settingsRepo: Repository<DeviceSettings>,
   ) {}
 
   async findAll() {
@@ -163,10 +169,20 @@ export class UserService {
           throw new NotFoundException();
         }
 
-        //onDelete: 'CASCADE' didn't work so I had to do this
+        const userDevices = await this.userDeviceRepo
+          .createQueryBuilder('userDevice')
+          .leftJoinAndSelect('userDevice.info', 'info')
+          .leftJoinAndSelect('userDevice.settings', 'settings')
+          .where('userDevice.user = :user', { user: user.id })
+          .getMany();
+
         const address = user.userAddress;
+        const info = userDevices.map((device) => device.info);
+        const settings = userDevices.map((device) => device.settings);
         const devices = user.devices;
 
+        await this.infoRepo.remove(info);
+        await this.settingsRepo.remove(settings);
         await this.userDeviceRepo.remove(devices);
         await this.addressRepo.remove(address);
         await this.userRepo.remove(user);

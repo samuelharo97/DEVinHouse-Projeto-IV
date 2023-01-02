@@ -110,7 +110,7 @@ export class UserDevicesService {
     return device;
   }
 
-  async findUserDevices(user: User) {
+  async findUserDevices(user: User): Promise<UserDevice[]> {
     /* Este query não funcionou. 
     'ERROR [ExceptionsHandler] Property "0" was not found in "User". 
     Make sure your query is correct.'
