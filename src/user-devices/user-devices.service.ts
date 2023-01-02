@@ -111,14 +111,24 @@ export class UserDevicesService {
   }
 
   async findUserDevices(user: User) {
-    const devices = await this.userDeviceRepo.find({
-      relations: { settings: true, info: true, user: true },
-      loadRelationIds: { relations: ['user'] },
-    });
+    /* Este query não funcionou. 
+    'ERROR [ExceptionsHandler] Property "0" was not found in "User". 
+    Make sure your query is correct.'
 
-    const filtered = devices.filter((device) => device.user == user);
+    const userDevices = await this.userDeviceRepo.find({
+      where: { user: user },
+      relations: ['info', 'settings'],
+    }); 
+    */
 
-    return filtered;
+    const userDevices = await this.userDeviceRepo
+      .createQueryBuilder('userDevice')
+      .leftJoinAndSelect('userDevice.info', 'info')
+      .leftJoinAndSelect('userDevice.settings', 'settings')
+      .where('userDevice.user = :user', { user: user })
+      .getMany();
+
+    return userDevices;
   }
 
   update(id: number, updateUserDeviceDto: UpdateUserDeviceDto) {

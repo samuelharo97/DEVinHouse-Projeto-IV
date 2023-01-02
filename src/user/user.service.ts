@@ -49,6 +49,10 @@ export class UserService {
           relations: { userAddress: true },
         });
 
+        if (!user) {
+          throw new NotFoundException(`no user with ID: ${userId}`);
+        }
+
         if (!user.phone) {
           delete user.phone;
         }

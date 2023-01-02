@@ -47,7 +47,8 @@ export class User {
   userAddress: Address;
 
   @OneToMany(() => UserDevice, (userDevice) => userDevice.user, {
-    persistence: true,
+    onDelete: 'CASCADE',
+    cascade: true,
   })
   devices: UserDevice[];
 

@@ -7,15 +7,12 @@ import {
   Param,
   Delete,
   UseGuards,
-  Req,
-  Request as typeormReq,
-  /* Request, */
+  Request,
 } from '@nestjs/common';
 import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
-import { Request } from 'express';
 
 @Controller('userDevices')
 export class UserDevicesController {
@@ -24,7 +21,7 @@ export class UserDevicesController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(
-    @typeormReq() request,
+    @Request() request,
     @Body() createUserDeviceDto: CreateUserDeviceDto,
   ) {
     const device = await this.userDevicesService.create(
@@ -41,7 +38,7 @@ export class UserDevicesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/all')
-  async findUserDevices(@typeormReq() request) {
+  async findUserDevices(@Request() request) {
     return await this.userDevicesService.findUserDevices(request.user['id']);
   }
 
