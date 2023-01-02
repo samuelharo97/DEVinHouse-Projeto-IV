@@ -70,8 +70,10 @@ export class AuthService {
       id: user.id,
       fullName: user.fullName,
       email: user.email,
+      photoUrl: user.photoUrl,
     };
     const token = await this.jwtService.sign(jwtPayload);
+
     return { token, user };
   }
 
