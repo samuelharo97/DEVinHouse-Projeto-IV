@@ -13,10 +13,7 @@ import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
-import {
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common/exceptions';
+import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Controller('userDevices')
 export class UserDevicesController {
@@ -41,7 +38,7 @@ export class UserDevicesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/all')
+  @Get('/user')
   async findUserDevices(@Request() request) {
     return await this.userDevicesService.findUserDevices(request.user['id']);
   }
@@ -56,6 +53,11 @@ export class UserDevicesController {
     } catch (error) {
       return error;
     }
+  }
+
+  @Get('/locals')
+  async locals() {
+    return this.userDevicesService.getLocals();
   }
 
   @Patch(':id')

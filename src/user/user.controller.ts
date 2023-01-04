@@ -42,9 +42,9 @@ export class UserController {
     return this.authService.modifyPassword(changePasswordDto);
   }
 
-  @Get('/one')
-  findOne(@Req() request: Request) {
-    return this.userService.findOne(request.user['id']);
+  @Get('/:id')
+  findOne(@Req() request: Request, @Param('id') param: string) {
+    return this.userService.findOne(param);
   }
 
   @Put()

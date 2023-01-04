@@ -13,6 +13,8 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('ConnectLab Server')
     .setDescription("API to handle ConnectLab's frontend requests")

@@ -131,6 +131,24 @@ export class UserDevicesService {
     return userDevices;
   }
 
+  getLocals() {
+    const locals = [
+      {
+        _id: '631b34696f2d2f24a7c0c960',
+        description: 'Casa',
+      },
+      {
+        _id: '631b34796f2d2f24a7c0c961',
+        description: 'Escritório',
+      },
+      {
+        _id: '631b348a6f2d2f24a7c0c962',
+        description: 'Fábrica',
+      },
+    ];
+    return locals;
+  }
+
   update(id: number, updateUserDeviceDto: UpdateUserDeviceDto) {
     return `This action updates a #${id} userDevice`;
   }
