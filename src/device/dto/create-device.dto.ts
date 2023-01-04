@@ -1,29 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNotEmptyObject,
-  IsObject,
-  ValidateNested,
-} from 'class-validator';
-import { DeviceInfoDto } from '../../user-devices/dto/device-info.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateDeviceDto {
+  @ApiProperty()
   @IsNotEmpty()
   name: string;
 
   @IsNotEmpty()
+  @ApiProperty()
   type: string;
 
   @IsNotEmpty()
+  @ApiProperty()
   madeBy: string;
 
   @IsNotEmpty()
+  @ApiProperty()
   photoUrl: string;
-
-  /* @ValidateNested({ each: true })
-  @IsObject()
-  @IsNotEmptyObject()
-  @Type(() => DeviceInfoDto)
-  info: DeviceInfoDto; */
 }

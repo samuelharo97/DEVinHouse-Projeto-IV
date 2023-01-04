@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
@@ -46,11 +46,15 @@ export class DeviceService {
     });
   }
 
-  update(id: number, updateDeviceDto: UpdateDeviceDto) {
-    return `This action updates a #${id} device`;
-  }
+  async remove(id: number) {
+    const device = await this.deviceRepo.findOne({ where: { _id: id } });
 
-  remove(id: number) {
-    return `This action removes a #${id} device`;
+    if (!device) {
+      throw new NotFoundException();
+    }
+
+    await this.deviceRepo.remove(device);
+
+    return { message: 'device removed from database' };
   }
 }

@@ -14,7 +14,9 @@ import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user devices')
 @Controller('userDevices')
 export class UserDevicesController {
   constructor(private readonly userDevicesService: UserDevicesService) {}

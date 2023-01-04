@@ -16,7 +16,9 @@ import { AuthService } from 'src/core/auth/auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Request } from 'express';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
