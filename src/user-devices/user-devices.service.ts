@@ -106,7 +106,6 @@ export class UserDevicesService {
       where: { id: deviceId },
       relations: { settings: true, info: true },
     });
-
     return device;
   }
 
@@ -149,8 +148,25 @@ export class UserDevicesService {
     return locals;
   }
 
-  update(id: number, updateUserDeviceDto: UpdateUserDeviceDto) {
-    return `This action updates a #${id} userDevice`;
+  updateStatus(userDevice: string, setting: boolean) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const device = await this.userDeviceRepo.findOne({
+          where: { id: userDevice },
+          relations: { settings: true, info: true },
+        });
+
+        if (!device) {
+          throw new NotFoundException();
+        }
+
+        device.settings.is_on = setting;
+
+        resolve(await this.userDeviceRepo.save(device));
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   remove(id: string) {

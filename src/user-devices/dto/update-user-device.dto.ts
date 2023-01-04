@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateUserDeviceDto } from './create-user-device.dto';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 
-export class UpdateUserDeviceDto extends PartialType(CreateUserDeviceDto) {}
+export class UpdateUserDeviceDto {
+  @IsBoolean()
+  @IsNotEmpty()
+  is_on: boolean;
+}

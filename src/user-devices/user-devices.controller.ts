@@ -50,6 +50,7 @@ export class UserDevicesController {
       if (!result) {
         throw new BadRequestException();
       }
+      return result;
     } catch (error) {
       return error;
     }
@@ -61,11 +62,14 @@ export class UserDevicesController {
   }
 
   @Patch(':id')
-  update(
+  async updateDeviceStatus(
     @Param('id') id: string,
     @Body() updateUserDeviceDto: UpdateUserDeviceDto,
   ) {
-    return this.userDevicesService.update(+id, updateUserDeviceDto);
+    return await this.userDevicesService.updateStatus(
+      id,
+      updateUserDeviceDto.is_on,
+    );
   }
 
   @Delete(':id')
