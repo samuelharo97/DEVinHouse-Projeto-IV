@@ -17,11 +17,11 @@ import { BadRequestException } from '@nestjs/common/exceptions';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('user devices')
+@UseGuards(JwtAuthGuard)
 @Controller('userDevices')
 export class UserDevicesController {
   constructor(private readonly userDevicesService: UserDevicesService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(
     @Request() request,
@@ -39,16 +39,19 @@ export class UserDevicesController {
     return this.userDevicesService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/user')
   async findUserDevices(@Request() request) {
     return await this.userDevicesService.findUserDevices(request.user['id']);
   }
 
-  @Get('/details/:id')
-  async deviceDetails(@Param('id') param: string) {
+  @Get('/details/:deviceId')
+  async deviceDetails(@Request() request, @Param('deviceId') param: string) {
+    console.log(request.user.id);
     try {
-      const result = await this.userDevicesService.findOne(param);
+      const result = await this.userDevicesService.findOne(
+        request.user.id,
+        param,
+      );
       if (!result) {
         throw new BadRequestException();
       }
@@ -75,9 +78,9 @@ export class UserDevicesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Request() request, @Param('id') id: string) {
     try {
-      return this.userDevicesService.remove(id);
+      return await this.userDevicesService.remove(id, request.user['id']);
     } catch (error) {
       return error;
     }

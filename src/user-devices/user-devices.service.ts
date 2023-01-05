@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Device } from 'src/device/entities/device.entity';
 import { User } from 'src/user/entities/user.entity';
 import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
@@ -101,25 +106,27 @@ export class UserDevicesService {
     });
   }
 
-  async findOne(deviceId: string) {
+  async findOne(userId: string, deviceId: string) {
     const device = await this.userDeviceRepo.findOne({
       where: { id: deviceId },
-      relations: { settings: true, info: true },
+      relations: { settings: true, info: true, user: true },
     });
+
+    console.log(userId != device.user.id);
+
+    if (userId != device.user.id) {
+      throw new UnauthorizedException({
+        description: `Access denied`,
+        cause: `User ${userId} does not own device ${deviceId}`,
+      });
+    }
+
+    delete device.user;
+
     return device;
   }
 
   async findUserDevices(user: User): Promise<UserDevice[]> {
-    /* Este query não funcionou. 
-    'ERROR [ExceptionsHandler] Property "0" was not found in "User". 
-    Make sure your query is correct.'
-
-    const userDevices = await this.userDeviceRepo.find({
-      where: { user: user },
-      relations: ['info', 'settings'],
-    }); 
-    */
-
     const userDevices = await this.userDeviceRepo
       .createQueryBuilder('userDevice')
       .leftJoinAndSelect('userDevice.info', 'info')
@@ -162,30 +169,42 @@ export class UserDevicesService {
 
         device.settings.is_on = setting;
 
-        resolve(await this.userDeviceRepo.save(device));
+        await this.userDeviceRepo.save(device);
+
+        resolve({ message: 'device successfully updated' });
       } catch (error) {
         reject(error);
       }
     });
   }
 
-  remove(id: string) {
+  remove(deviceId: string, userId: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        const userDevice = await this.userDeviceRepo.findOne({
-          where: { id: id },
-          relations: { info: true, settings: true },
+        const device = await this.userDeviceRepo.findOne({
+          where: { id: deviceId },
+          relations: { info: true, settings: true, user: true },
         });
 
-        if (!userDevice) {
-          throw new NotFoundException();
+        if (!device) {
+          throw new NotFoundException(`device id: ${deviceId} not found`);
         }
-        const info = userDevice.info;
-        const settings = userDevice.settings;
+
+        if (userId != device.user.id) {
+          throw new UnauthorizedException({
+            description: `Access denied`,
+            cause: `User ${userId} does not own device ${deviceId}, and therefore cannot delete it`,
+          });
+        }
+
+        delete device.user;
+
+        const info = device.info;
+        const settings = device.settings;
 
         await this.settingsRepo.remove(settings);
         await this.infoRepo.remove(info);
-        await this.userDeviceRepo.remove(userDevice);
+        await this.userDeviceRepo.remove(device);
 
         resolve({ acknowledged: true, deletedCount: 1 });
       } catch (error) {
