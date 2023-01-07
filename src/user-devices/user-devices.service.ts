@@ -60,21 +60,15 @@ export class UserDevicesService {
 
         deviceInstance.user = user;
 
-        deviceInfoInstance.mac_address
-          ? (deviceInfoInstance.mac_address = info.mac_address)
-          : (deviceInfoInstance.mac_address = deviceInfoInstance.addMAC());
+        deviceInfoInstance.mac_address =
+          info.mac_address || deviceInfoInstance.addMAC();
 
-        deviceInfoInstance.virtual_id
-          ? (deviceInfoInstance.virtual_id = info.virtual_id)
-          : (deviceInfoInstance.virtual_id = deviceInfoInstance.addVirtual());
+        deviceInfoInstance.virtual_id =
+          info.virtual_id || deviceInfoInstance.addVirtual();
 
-        deviceInfoInstance.ip_address
-          ? (deviceInfoInstance.ip_address = info.ip_address)
-          : (deviceInfoInstance.ip_address = '127.0.0.1');
+        deviceInfoInstance.ip_address = info.ip_address || '127.0.0.1';
 
-        deviceInfoInstance.signal
-          ? (deviceInfoInstance.signal = info.signal)
-          : (deviceInfoInstance.signal = null);
+        deviceInfoInstance.signal = `${info.signal}dBm` || '50dBm';
 
         deviceSettingsInstance.is_on = settings.is_on;
         deviceSettingsInstance.location = settings.location;

@@ -1,24 +1,35 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIP, IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsIP,
+  IsMACAddress,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class DeviceInfoDto {
-  @IsOptional()
   @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   virtual_id: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsIP()
-  @ApiPropertyOptional()
   ip_address: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional()
+  @IsMACAddress()
   mac_address: string;
 
-  @IsOptional()
   @ApiPropertyOptional()
-  @IsString()
-  signal: string;
+  @IsOptional()
+  @IsNumber()
+  @Max(100)
+  @Min(-100)
+  signal: number;
 }
