@@ -34,10 +34,6 @@ export class UserDevicesService {
       try {
         const { device_id, info, settings } = dto;
 
-        /* const user: User = await this.userRepo.findOne({
-          where: { id: userId },
-        }); */
-
         const user = this.userRepo.create(userPayload);
 
         if (!user) {
@@ -60,15 +56,23 @@ export class UserDevicesService {
 
         deviceInstance.user = user;
 
-        deviceInfoInstance.mac_address =
-          info.mac_address || deviceInfoInstance.addMAC();
+        if (info && info.mac_address) {
+          deviceInfoInstance.mac_address = info.mac_address;
+        } else {
+          deviceInfoInstance.mac_address = deviceInfoInstance.addMAC();
+        }
 
-        deviceInfoInstance.virtual_id =
-          info.virtual_id || deviceInfoInstance.addVirtual();
+        if (info && info.virtual_id) {
+          deviceInfoInstance.virtual_id =
+            info.virtual_id || deviceInfoInstance.addVirtual();
+        }
+        if (info && info.ip_address) {
+          deviceInfoInstance.ip_address = info.ip_address || '127.0.0.1';
+        }
 
-        deviceInfoInstance.ip_address = info.ip_address || '127.0.0.1';
-
-        deviceInfoInstance.signal = `${info.signal}dBm` || '50dBm';
+        if (info && info.signal) {
+          deviceInfoInstance.signal = `${info.signal}dBm` || '50dBm';
+        }
 
         deviceSettingsInstance.is_on = settings.is_on;
         deviceSettingsInstance.location = settings.location;
@@ -82,8 +86,6 @@ export class UserDevicesService {
 
         deviceInstance.info = savedInfo;
         deviceInstance.settings = savedSettings;
-
-        /* [user.devices, ...savedUserDevice.id]; */
 
         await this.userRepo.save(user);
 
