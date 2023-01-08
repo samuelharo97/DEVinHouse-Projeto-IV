@@ -1,4 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { Device } from 'src/device/entities/device.entity';
+import { DeviceInfo } from 'src/user-devices/entities/info.entity';
+import { DeviceSettings } from 'src/user-devices/entities/settings.entity';
+import { UserDevice } from 'src/user-devices/entities/user.devices.entity';
+import { Address } from 'src/user/entities/address.entity';
+import { User } from 'src/user/entities/user.entity';
 import { DataSource } from 'typeorm';
 require('dotenv-flow').config();
 
@@ -9,19 +15,12 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  entities: [
-    __dirname + '/../../user/**/*.entity{.ts,.js}',
-    '/../../user-devices/**/*.entity{.ts,.js}',
-    '/../../device/**/*.entity{.ts,.js}',
-    'dist/user/**/*.entity.js',
-    'dist/user-devices/**/*.entity.js',
-    'dist/device/**/*.entity.js',
-  ],
+  entities: [UserDevice, Address, User, DeviceInfo, DeviceSettings, Device],
   migrations: [
     __dirname + './migrations/*{.ts,.js}',
     'dist/core/database/migrations/*{.ts,.js}',
   ],
-  synchronize: true,
+  synchronize: false,
   migrationsRun: false,
   migrationsTableName: 'history',
 });
