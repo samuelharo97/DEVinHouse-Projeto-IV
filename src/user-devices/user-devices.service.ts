@@ -113,7 +113,7 @@ export class UserDevicesService {
     });
   }
 
-  async findOne(userId: string, deviceId: string) {
+  async getUserDeviceDetails(userId: string, deviceId: string) {
     const device = await this.userDeviceRepo.findOne({
       where: { id: deviceId },
       relations: { settings: true, info: true, user: true },
@@ -122,7 +122,7 @@ export class UserDevicesService {
     if (userId != device.user.id) {
       throw new UnauthorizedException({
         description: `Access denied`,
-        cause: `User ${userId} does not own device ${deviceId}`,
+        cause: `User ${userId} does not own device ${deviceId}, and therefore cannot GET details`,
       });
     }
 
@@ -174,7 +174,7 @@ export class UserDevicesService {
     return locals;
   }
 
-  updateStatus(userDevice: string, setting: boolean) {
+  updateStatus(userId: string, userDevice: string, setting: boolean) {
     return new Promise(async (resolve, reject) => {
       try {
         const device = await this.userDeviceRepo.findOne({
@@ -184,6 +184,13 @@ export class UserDevicesService {
 
         if (!device) {
           throw new NotFoundException();
+        }
+
+        if (userId != device.user.id) {
+          throw new UnauthorizedException({
+            description: `Access denied`,
+            cause: `User ${userId} does not own device ${device.id}, and therefore cannot update it`,
+          });
         }
 
         device.settings.is_on = setting;

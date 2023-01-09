@@ -16,18 +16,25 @@ import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthService } from 'src/core/auth/auth.service';
+import { request } from 'http';
 
 @ApiTags('user devices')
 @UseGuards(JwtAuthGuard)
 @Controller('userDevices')
 export class UserDevicesController {
-  constructor(private readonly userDevicesService: UserDevicesService) {}
+  constructor(
+    private readonly userDevicesService: UserDevicesService,
+    private readonly authService: AuthService,
+  ) {}
 
-  @Post()
+  @Post(':id')
   async create(
     @Request() request,
+    @Param('id') userId: string,
     @Body() createUserDeviceDto: CreateUserDeviceDto,
   ) {
+    this.authService.verifyUser(request.user['id'], userId);
     const device = await this.userDevicesService.create(
       request.user,
       createUserDeviceDto,
@@ -40,8 +47,13 @@ export class UserDevicesController {
     return this.userDevicesService.findAll(local);
   }
 
-  @Get('/user')
-  async findUserDevices(@Request() request, @Query('local') local: string) {
+  @Get('/:id')
+  async findUserDevices(
+    @Request() request,
+    @Param('id') userId: string,
+    @Query('local') local: string,
+  ) {
+    this.authService.verifyUser(request.user['id'], userId);
     return await this.userDevicesService.findUserDevices(
       request.user['id'],
       local,
@@ -51,7 +63,7 @@ export class UserDevicesController {
   @Get('/details/:deviceId')
   async deviceDetails(@Request() request, @Param('deviceId') param: string) {
     try {
-      const result = await this.userDevicesService.findOne(
+      const result = await this.userDevicesService.getUserDeviceDetails(
         request.user.id,
         param,
       );
@@ -71,10 +83,12 @@ export class UserDevicesController {
 
   @Patch(':id')
   async updateDeviceStatus(
+    @Request() request,
     @Param('id') id: string,
     @Body() updateUserDeviceDto: UpdateUserDeviceDto,
   ) {
     return await this.userDevicesService.updateStatus(
+      request.user['id'],
       id,
       updateUserDeviceDto.is_on,
     );
