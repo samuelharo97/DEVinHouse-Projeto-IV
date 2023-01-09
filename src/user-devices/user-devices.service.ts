@@ -9,7 +9,6 @@ import { User } from 'src/user/entities/user.entity';
 import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
 import { Repository } from 'typeorm';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
-import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { DeviceInfo } from './entities/info.entity';
 import { DeviceSettings } from './entities/settings.entity';
 import { UserDevice } from './entities/user.devices.entity';
@@ -37,7 +36,7 @@ export class UserDevicesService {
         const user = this.userRepo.create(userPayload);
 
         if (!user) {
-          throw new NotFoundException();
+          throw new NotFoundException({ message: `user not found` });
         }
 
         const device: Device = await this.deviceRepo.findOne({
@@ -45,7 +44,7 @@ export class UserDevicesService {
         });
 
         if (!device) {
-          throw new NotFoundException();
+          throw new NotFoundException({ message: `device not found` });
         }
 
         const deviceInstance = this.userDeviceRepo.create(); // id property doesn't exist yet, only after save
@@ -157,6 +156,7 @@ export class UserDevicesService {
   }
 
   getLocals() {
+    // temporary mock data
     const locals = [
       {
         _id: '631b34696f2d2f24a7c0c960',
