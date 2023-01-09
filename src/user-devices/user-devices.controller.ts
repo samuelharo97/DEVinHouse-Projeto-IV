@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
@@ -35,18 +36,20 @@ export class UserDevicesController {
   }
 
   @Get()
-  findAll() {
-    return this.userDevicesService.findAll();
+  findAll(@Query('local') local: string) {
+    return this.userDevicesService.findAll(local);
   }
 
   @Get('/user')
-  async findUserDevices(@Request() request) {
-    return await this.userDevicesService.findUserDevices(request.user['id']);
+  async findUserDevices(@Request() request, @Query('local') local: string) {
+    return await this.userDevicesService.findUserDevices(
+      request.user['id'],
+      local,
+    );
   }
 
   @Get('/details/:deviceId')
   async deviceDetails(@Request() request, @Param('deviceId') param: string) {
-    console.log(request.user.id);
     try {
       const result = await this.userDevicesService.findOne(
         request.user.id,

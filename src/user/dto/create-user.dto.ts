@@ -10,6 +10,7 @@ import {
   IsNotEmpty,
   ValidateNested,
   IsOptional,
+  Matches,
 } from 'class-validator';
 import { Match } from 'src/core/constraints/match.decorator';
 import { userAddressDto } from './user-address.dto';
@@ -31,6 +32,9 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+    message: 'Password must contain: letters, numbers and special characters',
+  })
   @MinLength(8)
   @IsNotEmpty()
   @MaxLength(30)

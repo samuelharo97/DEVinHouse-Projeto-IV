@@ -96,7 +96,19 @@ export class UserDevicesService {
     });
   }
 
-  async findAll() {
+  async findAll(local: string) {
+    if (local) {
+      const userDevices = await this.userDeviceRepo
+        .createQueryBuilder('userDevice')
+        .leftJoinAndSelect('userDevice.info', 'info')
+        .leftJoinAndSelect('userDevice.settings', 'settings')
+        .where('settings.location ILIKE :local', {
+          local: local,
+        })
+        .getMany();
+      return userDevices;
+    }
+
     return await this.userDeviceRepo.find({
       relations: { settings: true, info: true },
     });
@@ -107,8 +119,6 @@ export class UserDevicesService {
       where: { id: deviceId },
       relations: { settings: true, info: true, user: true },
     });
-
-    console.log(userId != device.user.id);
 
     if (userId != device.user.id) {
       throw new UnauthorizedException({
@@ -122,13 +132,26 @@ export class UserDevicesService {
     return device;
   }
 
-  async findUserDevices(user: User): Promise<UserDevice[]> {
-    const userDevices = await this.userDeviceRepo
-      .createQueryBuilder('userDevice')
-      .leftJoinAndSelect('userDevice.info', 'info')
-      .leftJoinAndSelect('userDevice.settings', 'settings')
-      .where('userDevice.user = :user', { user: user })
-      .getMany();
+  async findUserDevices(user: User, local: string): Promise<UserDevice[]> {
+    let userDevices: UserDevice[];
+    if (local) {
+      userDevices = await this.userDeviceRepo
+        .createQueryBuilder('userDevice')
+        .leftJoinAndSelect('userDevice.info', 'info')
+        .leftJoinAndSelect('userDevice.settings', 'settings')
+        .where('settings.location ILIKE :local AND userDevice.user = :user', {
+          local: local,
+          user: user,
+        })
+        .getMany();
+    } else {
+      userDevices = await this.userDeviceRepo
+        .createQueryBuilder('userDevice')
+        .leftJoinAndSelect('userDevice.info', 'info')
+        .leftJoinAndSelect('userDevice.settings', 'settings')
+        .where('userDevice.user = :user', { user: user })
+        .getMany();
+    }
 
     return userDevices;
   }

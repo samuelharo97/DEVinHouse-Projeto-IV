@@ -48,7 +48,7 @@ export class AuthService {
       delete user.password;
       delete newUser.salt;
 
-      resolve({ user });
+      resolve({ message: `Well done. Your account was created.` });
     });
   }
 
@@ -63,7 +63,7 @@ export class AuthService {
   async signIn(credentials: CredentialsDTO) {
     const user = await this.checkCredentials(credentials);
     if (user === null) {
-      throw new UnauthorizedException('E-mail e/ou senha incorretos');
+      throw new UnauthorizedException('E-mail and/or password are incorrect');
     }
 
     const jwtPayload: JwtPayloadUser = {
@@ -125,7 +125,7 @@ export class AuthService {
     const user = await this.checkCredentials(credentials);
 
     if (!user) {
-      throw new UnauthorizedException('E-mail e/ou senha incorretos');
+      throw new UnauthorizedException('E-mail and/or password are incorrect');
     }
 
     user.salt = await bcrypt.genSalt(12);
@@ -136,6 +136,6 @@ export class AuthService {
     delete user.password;
     delete user.salt;
 
-    return { message: `password changed successfully` };
+    return { message: `Password has been changed` };
   }
 }
