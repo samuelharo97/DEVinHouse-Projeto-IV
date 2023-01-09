@@ -72,7 +72,7 @@ export class UserService {
     });
   }
 
-  update(userId: string, updateUserDto: UpdateUserDto) {
+  update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userRepo.findOne({

@@ -1,0 +1,163 @@
+[
+  {
+    "_id": 1,
+    "name": "Lâmpada LED",
+    "type": "Energia",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBRDb.png"
+  },
+  {
+    "_id": 2,
+    "name": "Interruptor Conector Inteligente",
+    "type": "Energia",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBxlS.png"
+  },
+  {
+    "_id": 3,
+    "name": "Interruptor Inteligente Soquete",
+    "type": "Energia",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBzU7.png"
+  },
+  {
+    "_id": 4,
+    "name": "Sensor de presença para iluminação",
+    "type": "Energia",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBuRe.png"
+  },
+  {
+    "_id": 5,
+    "name": "Sensor de presença para iluminação 2",
+    "type": "Energia",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBTJ9.png"
+  },
+  {
+    "_id": 6,
+    "name": "Interruptor Smart Wi-Fi ",
+    "type": "Energia",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBAOu.png"
+  },
+  {
+    "_id": 7,
+    "name": "Câmera de vídeo iM4 C",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBHlI.png"
+  },
+  {
+    "_id": 8,
+    "name": "Câmera de vídeo iME 360",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBJSt.png"
+  },
+  {
+    "_id": 9,
+    "name": "Hub de automação",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBCil.png"
+  },
+  {
+    "_id": 10,
+    "name": "Câmera veicular",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBFNs.png"
+  },
+  {
+    "_id": 11,
+    "name": "Sensor de abertura",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBYWx.png"
+  },
+  {
+    "_id": 12,
+    "name": "Detector de fumaça",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBqxf.png"
+  },
+  {
+    "_id": 13,
+    "name": "Sensor de temperatura e umidade",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBlfV.png"
+  },
+  {
+    "_id": 14,
+    "name": "Bloco de iluminação autônomo",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDB3Rn.png"
+  },
+  {
+    "_id": 15,
+    "name": "Sirene smart ISI",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDB1UP.png"
+  },
+  {
+    "_id": 16,
+    "name": "Sensor de Movimento smart",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBaiQ.png"
+  },
+  {
+    "_id": 17,
+    "name": "Luminária de emergência autônoma",
+    "type": "Segurança eletrônica",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDB7xj.png"
+  },
+  {
+    "_id": 18,
+    "name": "Smart box Android TV",
+    "type": "Comunicação",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDB00B.png"
+  },
+  {
+    "_id": 19,
+    "name": "Smart controle universal infravermelho",
+    "type": "Comunicação",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBGJ1.png"
+  },
+  {
+    "_id": 20,
+    "name": "Alto falante inteligente",
+    "type": "Comunicação",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDB2HX.png"
+  },
+  {
+    "_id": 21,
+    "name": "Fechadura smart de sobrepor",
+    "type": "Controle de Acesso",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBof2.png"
+  },
+  {
+    "_id": 22,
+    "name": "Fechadura Smart de embutir c/ maçaneta",
+    "type": "Controle de Acesso",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBKDG.png"
+  },
+  {
+    "_id": 23,
+    "name": "Fechadura digital de pressão",
+    "type": "Controle de Acesso",
+    "madeBy": "Intelbras",
+    "photoUrl": "https://iili.io/LDBBV4.png"
+  }
+]

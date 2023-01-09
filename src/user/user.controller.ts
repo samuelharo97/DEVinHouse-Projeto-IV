@@ -17,6 +17,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { Request } from 'express';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { ApiTags } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
 
 @ApiTags('users')
 @UseGuards(JwtAuthGuard)
@@ -38,34 +39,63 @@ export class UserController {
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
     if (request.user['email'] != changePasswordDto.email) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        success: false,
+        message:
+          'Error: The email in the request does not match the email of the logged-in user.',
+      });
     }
-
     return this.authService.modifyPassword(changePasswordDto);
   }
 
   @Get('/:id')
-  findOne(@Req() request: Request, @Param('id') param: string) {
-    return this.userService.findOne(param);
+  async findOne(@Req() request: Request, @Param('id') userId: string) {
+    try {
+      this.authService.verifyUser(request.user['id'], userId);
+      const response = await this.userService.findOne(userId);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Put()
-  update(@Req() request: Request, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(request.user['id'], updateUserDto);
+  @Put(':id')
+  async update(
+    @Req() request: Request,
+    @Param('id') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    try {
+      this.authService.verifyUser(request.user['id'], userId);
+      return await this.userService.update(userId, updateUserDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Patch('/block/:id')
-  block(@Param('id') id: string) {
-    return this.userService.block(id);
+  block(@Req() request: Request, @Param('id') userId: string) {
+    this.authService.verifyUser(request.user['id'], userId);
+    return this.userService.block(userId);
   }
 
   @Patch('/unblock/:id')
-  unblock(@Param('id') id: string) {
-    return this.userService.unblock(id);
+  unblock(@Req() request: Request, @Param('id') userId: string) {
+    try {
+      this.authService.verifyUser(request.user['id'], userId);
+      return this.userService.unblock(userId);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete('/:id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  remove(@Req() request: Request, @Param('id') userId: string) {
+    try {
+      this.authService.verifyUser(request.user['id'], userId);
+      return this.userService.remove(userId);
+    } catch (error) {
+      throw error;
+    }
   }
 }

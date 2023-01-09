@@ -118,6 +118,17 @@ export class AuthService {
     return this.jwtService.decode(jwtToken);
   }
 
+  verifyUser(requestId: string, userId: string) {
+    if (requestId != userId) {
+      throw new UnauthorizedException({
+        success: false,
+        message:
+          'Error: The user in the request does not match the logged-in user.',
+      });
+    }
+    return;
+  }
+
   async modifyPassword(changePasswordDto: ChangePasswordDto) {
     const { email, old_password, new_password } = changePasswordDto;
     const credentials = { email, password: old_password };
