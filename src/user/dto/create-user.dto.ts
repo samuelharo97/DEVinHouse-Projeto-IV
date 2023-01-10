@@ -15,6 +15,7 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 import { Match } from 'src/core/constraints/match.decorator';
+import { IsImageUrl } from 'src/core/constraints/url.decorator';
 import { userAddressDto } from './user-address.dto';
 
 export class CreateUserDto {
@@ -50,13 +51,14 @@ export class CreateUserDto {
   @IsNotEmpty()
   confirm_password: string;
 
-  @ApiProperty()
-  @IsString()
-  @Matches(/\.(jpe?g|png|gif)$/, {
+  /* @Matches(/\.(jpe?g|png|gif)$/, {
     message:
       'photoUrl must be a link ending in either: .jpeg / .jpg / .png / .gif',
-  })
+  }) */
+  @ApiProperty()
+  @IsString()
   @IsUrl()
+  @IsImageUrl({ message: 'photo URL must lead to an image' })
   photoUrl?: string;
 
   @ApiProperty()
