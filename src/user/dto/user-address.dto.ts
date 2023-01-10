@@ -1,8 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  Matches,
+} from 'class-validator';
 
 export class userAddressDto {
   @ApiProperty()
+  @Matches(/^[0-9]+$/, { message: `must be brazilian zipcode with no "-"` })
   @IsString()
   @IsNotEmpty()
   zipCode: string;

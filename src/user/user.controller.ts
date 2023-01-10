@@ -33,6 +33,15 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('/locals')
+  locals() {
+    try {
+      return this.userService.getLocals();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Patch('/change-password')
   modifyPassword(
     @Req() request: Request,

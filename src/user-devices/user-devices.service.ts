@@ -9,6 +9,7 @@ import { User } from 'src/user/entities/user.entity';
 import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
 import { Repository } from 'typeorm';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
+import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { DeviceInfo } from './entities/info.entity';
 import { DeviceSettings } from './entities/settings.entity';
 import { UserDevice } from './entities/user.devices.entity';
@@ -62,15 +63,19 @@ export class UserDevicesService {
         }
 
         if (info && info.virtual_id) {
-          deviceInfoInstance.virtual_id =
-            info.virtual_id || deviceInfoInstance.addVirtual();
+          deviceInfoInstance.virtual_id = info.virtual_id;
+        } else {
+          deviceInfoInstance.virtual_id = deviceInfoInstance.addVirtual();
         }
+
         if (info && info.ip_address) {
-          deviceInfoInstance.ip_address = info.ip_address || '127.0.0.1';
+          deviceInfoInstance.ip_address = info.ip_address;
         }
 
         if (info && info.signal) {
-          deviceInfoInstance.signal = `${info.signal}dBm` || '50dBm';
+          deviceInfoInstance.signal = `${info.signal}dBm`;
+        } else {
+          deviceInfoInstance.signal = '50dBm';
         }
 
         deviceSettingsInstance.is_on = settings.is_on;
@@ -155,31 +160,16 @@ export class UserDevicesService {
     return userDevices;
   }
 
-  getLocals() {
-    // temporary mock data
-    const locals = [
-      {
-        _id: '631b34696f2d2f24a7c0c960',
-        description: 'Casa',
-      },
-      {
-        _id: '631b34796f2d2f24a7c0c961',
-        description: 'Escritório',
-      },
-      {
-        _id: '631b348a6f2d2f24a7c0c962',
-        description: 'Fábrica',
-      },
-    ];
-    return locals;
-  }
-
-  updateStatus(userId: string, userDevice: string, setting: boolean) {
+  updateStatus(
+    userId: string,
+    userDevice: string,
+    setting: boolean,
+  ): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         const device = await this.userDeviceRepo.findOne({
           where: { id: userDevice },
-          relations: { settings: true, info: true },
+          relations: { settings: true, info: true, user: true },
         });
 
         if (!device) {
@@ -204,7 +194,48 @@ export class UserDevicesService {
     });
   }
 
-  remove(deviceId: string, userId: string) {
+  update(
+    userId: string,
+    deviceId: string,
+    dto: UpdateUserDeviceDto,
+  ): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { ip_address, is_on, location, room, signal, virtual_id } = dto;
+
+        const device = await this.userDeviceRepo.findOne({
+          where: { id: deviceId },
+          relations: { info: true, settings: true, user: true },
+        });
+
+        if (!device) {
+          throw new NotFoundException({
+            message: `device id: ${deviceId} not found`,
+          });
+        }
+
+        const user = await this.userRepo.findOne({ where: { id: userId } });
+
+        if (!user) {
+          throw new NotFoundException({ message: 'user not found' });
+        }
+
+        device.settings.is_on = is_on;
+        device.settings.location = location;
+        device.settings.room = room;
+        device.info.ip_address = ip_address;
+        device.info.signal = `${signal}dBm`;
+        device.info.virtual_id = virtual_id;
+
+        await this.userDeviceRepo.save(device);
+        resolve({ message: 'device successfully updated' });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  remove(deviceId: string, userId: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         const device = await this.userDeviceRepo.findOne({
@@ -213,7 +244,9 @@ export class UserDevicesService {
         });
 
         if (!device) {
-          throw new NotFoundException(`device id: ${deviceId} not found`);
+          throw new NotFoundException({
+            message: `device id: ${deviceId} not found`,
+          });
         }
 
         if (userId != device.user.id) {

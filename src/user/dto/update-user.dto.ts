@@ -10,6 +10,9 @@ import {
   IsNotEmpty,
   ValidateNested,
   IsOptional,
+  IsPhoneNumber,
+  Matches,
+  IsUrl,
 } from 'class-validator';
 import { userAddressDto } from './user-address.dto';
 
@@ -30,10 +33,16 @@ export class UpdateUserDto {
 
   @ApiProperty()
   @IsString()
+  @Matches(/\.(jpe?g|png|gif)$/, {
+    message:
+      'photoUrl must be a link ending in either: .jpeg / .jpg / .png / .gif',
+  })
+  @IsUrl()
   photoUrl?: string;
 
   @IsString()
   @ApiProperty()
+  @IsPhoneNumber('BR')
   @IsOptional()
   phone: string;
 

@@ -12,6 +12,7 @@ import {
   IsOptional,
   Matches,
   IsUrl,
+  IsPhoneNumber,
 } from 'class-validator';
 import { Match } from 'src/core/constraints/match.decorator';
 import { userAddressDto } from './user-address.dto';
@@ -60,6 +61,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
+  @IsPhoneNumber('BR')
   @IsOptional()
   phone: string;
 

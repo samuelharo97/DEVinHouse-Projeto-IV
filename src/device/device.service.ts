@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateDeviceDto } from './dto/create-device.dto';
-import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Device } from './entities/device.entity';
 
 @Injectable()
@@ -12,19 +11,23 @@ export class DeviceService {
   ) {}
 
   create(createDeviceDto: CreateDeviceDto) {
-    return new Promise<Device>(async (resolve) => {
-      const { type, madeBy, name, photoUrl } = createDeviceDto;
+    return new Promise<Device>(async (resolve, reject) => {
+      try {
+        const { type, madeBy, name, photoUrl } = createDeviceDto;
 
-      const newDevice = this.deviceRepo.create();
+        const newDevice = this.deviceRepo.create();
 
-      newDevice.name = name;
-      newDevice.photoUrl = photoUrl;
-      newDevice.type = type;
-      newDevice.madeBy = madeBy;
+        newDevice.name = name;
+        newDevice.photoUrl = photoUrl;
+        newDevice.type = type;
+        newDevice.madeBy = madeBy;
 
-      const device = await this.deviceRepo.save(newDevice);
+        const device = await this.deviceRepo.save(newDevice);
 
-      resolve(device);
+        resolve(device);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 

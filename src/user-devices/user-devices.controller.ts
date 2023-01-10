@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   Query,
+  Put,
 } from '@nestjs/common';
 import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
@@ -17,7 +18,7 @@ import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/core/auth/auth.service';
-import { request } from 'http';
+import { UpdateDeviceStatus } from './dto/update-device-status.dto';
 
 @ApiTags('user devices')
 @UseGuards(JwtAuthGuard)
@@ -76,28 +77,44 @@ export class UserDevicesController {
     }
   }
 
-  @Get('/locals')
-  async locals() {
-    return this.userDevicesService.getLocals();
-  }
-
   @Patch(':id')
   async updateDeviceStatus(
     @Request() request,
-    @Param('id') id: string,
-    @Body() updateUserDeviceDto: UpdateUserDeviceDto,
+    @Param('id') deviceId: string,
+    @Body() dto: UpdateDeviceStatus,
   ) {
-    return await this.userDevicesService.updateStatus(
-      request.user['id'],
-      id,
-      updateUserDeviceDto.is_on,
-    );
+    try {
+      return await this.userDevicesService.updateStatus(
+        request.user['id'],
+        deviceId,
+        dto.is_on,
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put(':id')
+  async updateUserDevice(
+    @Request() request,
+    @Param('id') deviceId: string,
+    @Body() dto: UpdateUserDeviceDto,
+  ) {
+    try {
+      return await this.userDevicesService.update(
+        request.user['id'],
+        deviceId,
+        dto,
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete(':id')
-  async remove(@Request() request, @Param('id') id: string) {
+  async remove(@Request() request, @Param('id') deviceId: string) {
     try {
-      return await this.userDevicesService.remove(id, request.user['id']);
+      return await this.userDevicesService.remove(deviceId, request.user['id']);
     } catch (error) {
       return error;
     }
