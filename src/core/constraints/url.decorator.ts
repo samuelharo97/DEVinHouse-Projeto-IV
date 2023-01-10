@@ -4,6 +4,7 @@ import axios from 'axios';
 async function validateUrl(url: string): Promise<boolean> {
   try {
     const { headers } = await axios.head(url);
+
     if (!headers['content-type'].startsWith('image')) {
       return false;
     }

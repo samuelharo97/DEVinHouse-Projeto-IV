@@ -42,19 +42,19 @@ export class UserController {
     }
   }
 
-  @Patch('/change-password')
+  @Patch(':id')
   modifyPassword(
     @Req() request: Request,
+    @Param('id') userId: string,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    if (request.user['email'] != changePasswordDto.email) {
-      throw new UnauthorizedException({
-        success: false,
-        message:
-          'Error: The email in the request does not match the email of the logged-in user.',
-      });
+    try {
+      this.authService.verifyUser(request.user['id'], userId);
+
+      return this.authService.modifyPassword(changePasswordDto);
+    } catch (error) {
+      throw error;
     }
-    return this.authService.modifyPassword(changePasswordDto);
   }
 
   @Get('/:id')

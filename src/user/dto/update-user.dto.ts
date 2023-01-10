@@ -14,6 +14,7 @@ import {
   Matches,
   IsUrl,
 } from 'class-validator';
+import { IsImageUrl } from 'src/core/constraints/url.decorator';
 import { userAddressDto } from './user-address.dto';
 
 export class UpdateUserDto {
@@ -33,11 +34,8 @@ export class UpdateUserDto {
 
   @ApiProperty()
   @IsString()
-  @Matches(/\.(jpe?g|png|gif)$/, {
-    message:
-      'photoUrl must be a link ending in either: .jpeg / .jpg / .png / .gif',
-  })
   @IsUrl()
+  @IsImageUrl({ message: 'photo URL must lead to an image' })
   photoUrl?: string;
 
   @IsString()
