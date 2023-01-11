@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthService } from './core/auth/auth.service';
 import { JwtStrategy } from './core/auth/guards/strategy/jwt.strategy';
 import { databaseProviders } from './core/database/database.providers';
@@ -35,7 +34,6 @@ import { userDeviceProviders } from './user-devices/user-device.providers';
     ...userProviders,
     ...deviceProviders,
     ...userDeviceProviders,
-    AppService,
     AuthService,
     JwtStrategy,
   ],

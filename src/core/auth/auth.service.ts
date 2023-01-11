@@ -8,6 +8,7 @@ import { CredentialsDTO } from './dto/credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
 import { ChangePasswordDto } from 'src/user/dto/change-password.dto';
+import { rejects } from 'assert';
 
 @Injectable()
 export class AuthService {
@@ -20,35 +21,39 @@ export class AuthService {
   ) {}
 
   createUser(createUser: CreateUserDto): Promise<any> {
-    return new Promise(async (resolve) => {
-      const { fullName, email, photoUrl, phone, userAddress, password } =
-        createUser;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { fullName, email, photoUrl, phone, userAddress, password } =
+          createUser;
 
-      const newUser = this.userRepo.create();
-      const newAddress = this.addressRepo.create();
+        const newUser = this.userRepo.create();
+        const newAddress = this.addressRepo.create();
 
-      newUser.fullName = fullName;
-      newUser.email = email;
-      newUser.photoUrl = photoUrl || newUser.photoUrl;
-      newUser.phone = phone;
-      newUser.salt = await bcrypt.genSalt(12);
-      newUser.password = await this.hashPassword(password, newUser.salt);
-      newUser.userAddress = newAddress;
-      newAddress.city = userAddress.city;
-      newAddress.zipCode = userAddress.zipCode;
-      newAddress.neighborhood = userAddress.neighborhood;
-      newAddress.number = userAddress.number;
-      newAddress.street = userAddress.street;
-      newAddress.state = userAddress.state;
-      newAddress.complement = userAddress.complement;
-      newUser.devices = [];
+        newUser.fullName = fullName;
+        newUser.email = email;
+        newUser.photoUrl = photoUrl || newUser.photoUrl;
+        newUser.phone = phone;
+        newUser.salt = await bcrypt.genSalt(12);
+        newUser.password = await this.hashPassword(password, newUser.salt);
+        newUser.userAddress = newAddress;
+        newAddress.city = userAddress.city;
+        newAddress.zipCode = userAddress.zipCode;
+        newAddress.neighborhood = userAddress.neighborhood;
+        newAddress.number = userAddress.number;
+        newAddress.street = userAddress.street;
+        newAddress.state = userAddress.state;
+        newAddress.complement = userAddress.complement;
+        newUser.devices = [];
 
-      const user = await this.userRepo.save(newUser);
-      await this.addressRepo.save(newAddress);
-      delete user.password;
-      delete newUser.salt;
+        const user = await this.userRepo.save(newUser);
+        await this.addressRepo.save(newAddress);
+        delete user.password;
+        delete newUser.salt;
 
-      resolve({ message: `Well done. Your account was created.` });
+        resolve({ message: `Well done. Your account was created.` });
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
