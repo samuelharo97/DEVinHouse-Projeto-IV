@@ -22,8 +22,14 @@ export class AppController {
 
       return newUser;
     } catch (error) {
+      if (error.code == 23505) {
+        throw new HttpException(
+          { reason: error?.detail, code: error?.code },
+          HttpStatus.CONFLICT,
+        );
+      }
       throw new HttpException(
-        { reason: error?.detail },
+        { reason: error?.detail, code: error?.code },
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -36,10 +42,7 @@ export class AppController {
 
       return responseToken;
     } catch (error) {
-      throw new HttpException(
-        { reason: error?.detail },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw error;
     }
   }
 }

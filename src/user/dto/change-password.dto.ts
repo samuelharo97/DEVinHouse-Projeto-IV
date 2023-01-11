@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   MaxLength,
   MinLength,
+  Matches,
 } from 'class-validator';
 import { Match } from 'src/core/constraints/match.decorator';
 
@@ -18,6 +19,10 @@ export class ChangePasswordDto {
 
   @ApiProperty()
   @IsString()
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+    message:
+      'old_password must contain: letters, numbers and special characters',
+  })
   @MinLength(8)
   @IsNotEmpty()
   @MaxLength(30)
@@ -25,6 +30,10 @@ export class ChangePasswordDto {
 
   @ApiProperty()
   @IsString()
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+    message:
+      'new_password must contain: letters, numbers and special characters',
+  })
   @MinLength(8)
   @IsNotEmpty()
   @MaxLength(30)
@@ -32,9 +41,13 @@ export class ChangePasswordDto {
 
   @ApiProperty()
   @IsString()
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+    message:
+      'confirm_password must contain: letters, numbers and special characters',
+  })
   @MinLength(8)
+  @IsNotEmpty()
   @MaxLength(30)
   @Match('new_password')
-  @IsNotEmpty()
   confirm_password: string;
 }

@@ -66,24 +66,32 @@ export class AuthService {
   }
 
   async signIn(credentials: CredentialsDTO) {
-    const user = await this.checkCredentials(credentials);
-    if (user === null) {
-      throw new UnauthorizedException('E-mail and/or password are incorrect');
-    }
+    return await new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.checkCredentials(credentials);
+        if (user === null) {
+          throw new UnauthorizedException(
+            'E-mail and/or password are incorrect',
+          );
+        }
 
-    if (user.is_active === false) {
-      throw new UnauthorizedException('account was suspended or banned');
-    }
+        if (user.is_active === false) {
+          throw new UnauthorizedException('account was suspended or banned');
+        }
 
-    const jwtPayload: JwtPayloadUser = {
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      photoUrl: user.photoUrl,
-    };
-    const token = await this.jwtService.sign(jwtPayload);
+        const jwtPayload: JwtPayloadUser = {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          photoUrl: user.photoUrl,
+        };
+        const token = await this.jwtService.sign(jwtPayload);
 
-    return { token, user };
+        resolve({ token, user });
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async checkCredentials(credentials: CredentialsDTO) {

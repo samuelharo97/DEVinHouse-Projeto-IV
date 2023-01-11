@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Req,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -83,8 +85,15 @@ export class UserController {
 
   @Patch('/block/:id')
   block(@Req() request: Request, @Param('id') userId: string) {
-    this.authService.verifyUser(request.user['id'], userId);
-    return this.userService.block(userId);
+    try {
+      this.authService.verifyUser(request.user['id'], userId);
+      return this.userService.block(userId);
+    } catch (error) {
+      throw new HttpException(
+        { reason: error?.detail },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Patch('/unblock/:id')
@@ -93,7 +102,10 @@ export class UserController {
       this.authService.verifyUser(request.user['id'], userId);
       return this.userService.unblock(userId);
     } catch (error) {
-      throw error;
+      throw new HttpException(
+        { reason: error?.detail },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -103,7 +115,10 @@ export class UserController {
       this.authService.verifyUser(request.user['id'], userId);
       return this.userService.remove(userId);
     } catch (error) {
-      throw error;
+      throw new HttpException(
+        { reason: error?.detail },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }
