@@ -11,7 +11,6 @@ import {
   ValidateNested,
   IsOptional,
   IsPhoneNumber,
-  Matches,
   IsUrl,
 } from 'class-validator';
 import { IsImageUrl } from 'src/core/constraints/url.decorator';
@@ -33,6 +32,7 @@ export class UpdateUserDto {
   fullName: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
   @IsUrl()
   @IsImageUrl({ message: 'photo URL must lead to an image' })

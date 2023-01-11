@@ -228,6 +228,9 @@ export class UserDevicesService {
         device.info.virtual_id = virtual_id;
 
         await this.userDeviceRepo.save(device);
+
+        delete device.user;
+
         resolve({ message: 'device successfully updated' });
       } catch (error) {
         reject(error);

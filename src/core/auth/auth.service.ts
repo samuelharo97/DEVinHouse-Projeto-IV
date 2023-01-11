@@ -66,6 +66,10 @@ export class AuthService {
       throw new UnauthorizedException('E-mail and/or password are incorrect');
     }
 
+    if (user.is_active === false) {
+      throw new UnauthorizedException('account was suspended or banned');
+    }
+
     const jwtPayload: JwtPayloadUser = {
       id: user.id,
       fullName: user.fullName,

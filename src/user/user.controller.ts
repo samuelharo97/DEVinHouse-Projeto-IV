@@ -15,7 +15,6 @@ import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 import { AuthService } from 'src/core/auth/auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Request } from 'express';
-import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 
