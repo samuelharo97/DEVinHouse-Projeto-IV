@@ -8,7 +8,6 @@ import { CredentialsDTO } from './dto/credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtPayloadUser } from 'src/utils/jwt-payload-user';
 import { ChangePasswordDto } from 'src/user/dto/change-password.dto';
-import { rejects } from 'assert';
 
 @Injectable()
 export class AuthService {
