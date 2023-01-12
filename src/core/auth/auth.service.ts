@@ -50,7 +50,7 @@ export class AuthService {
         delete user.password;
         delete newUser.salt;
 
-        resolve({ message: `Well done. Your account was created.` });
+        resolve({ message: `Well done. Your account was created.`, user });
       } catch (error) {
         reject(error);
       }
@@ -81,13 +81,14 @@ export class AuthService {
 
         const jwtPayload: JwtPayloadUser = {
           id: user.id,
-          fullName: user.fullName,
+          fullName: user.fullName.split(' ')[0],
           email: user.email,
           photoUrl: user.photoUrl,
         };
+
         const token = await this.jwtService.sign(jwtPayload);
 
-        resolve({ token, user });
+        resolve({ token, user, message: 'login was successfull' });
       } catch (error) {
         reject(error);
       }

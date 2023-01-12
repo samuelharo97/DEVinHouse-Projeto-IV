@@ -35,11 +35,4 @@ export class UserDevice {
   })
   @JoinColumn({ name: 'info_id' })
   info: DeviceInfo;
-
-  /* addDevice(userDevice: Device) {
-    if (!this.device) {
-      this.device = new Array<Device>();
-    }
-    this.device.push(userDevice);
-  } */
 }
