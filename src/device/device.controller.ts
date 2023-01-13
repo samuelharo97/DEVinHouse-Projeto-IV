@@ -58,7 +58,7 @@ export class DeviceController {
   @Put(':id')
   async update(@Param('id') deviceId: string, @Body() dto: UpdateDeviceDto) {
     try {
-      const device = await this.deviceService.update(deviceId, dto);
+      const device = await this.deviceService.update(+deviceId, dto);
       return device;
     } catch (error) {
       throw error;

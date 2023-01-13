@@ -50,7 +50,7 @@ export class DeviceService {
     });
   }
 
-  update(deviceId: any, dto: UpdateDeviceDto) {
+  update(deviceId: number, dto: UpdateDeviceDto) {
     return new Promise(async (resolve, reject) => {
       try {
         const device = await this.deviceRepo.findOne({

@@ -19,11 +19,10 @@ export class AuthService {
     private addressRepo: Repository<Address>,
   ) {}
 
-  createUser(createUser: CreateUserDto): Promise<any> {
+  register(dto: CreateUserDto): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const { fullName, email, photoUrl, phone, userAddress, password } =
-          createUser;
+        const { fullName, email, photoUrl, phone, userAddress, password } = dto;
 
         const newUser = this.userRepo.create();
         const newAddress = this.addressRepo.create();
@@ -49,7 +48,7 @@ export class AuthService {
         delete user.password;
         delete newUser.salt;
 
-        resolve({ message: `Well done. Your account was created.`, user });
+        resolve({ message: `Well done. Your account was created.` });
       } catch (error) {
         reject(error);
       }
@@ -61,7 +60,7 @@ export class AuthService {
   }
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
-    return await this.createUser(createUserDto);
+    return await this.register(createUserDto);
   }
 
   async signIn(credentials: CredentialsDTO) {
@@ -87,7 +86,7 @@ export class AuthService {
 
         const token = await this.jwtService.sign(jwtPayload);
 
-        resolve({ token, user, message: 'login was successfull' });
+        resolve({ token, user, message: 'login was successful' });
       } catch (error) {
         reject(error);
       }
