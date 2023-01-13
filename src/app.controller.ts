@@ -1,5 +1,6 @@
 import {
   Body,
+  Get,
   Controller,
   HttpException,
   HttpStatus,
@@ -14,6 +15,11 @@ import { User } from './user/entities/user.entity';
 @Controller()
 export class AppController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('/hi')
+  hello() {
+    return 'hello';
+  }
 
   @Post('/auth/register')
   async signUp(@Body() createUserDto: CreateUserDto): Promise<User> {
