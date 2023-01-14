@@ -48,7 +48,7 @@ export class UserDevicesService {
           throw new NotFoundException({ message: `device not found` });
         }
 
-        const deviceInstance = this.userDeviceRepo.create(); // id property doesn't exist yet, only after save
+        const deviceInstance = this.userDeviceRepo.create();
         const deviceInfoInstance = this.infoRepo.create();
         const deviceSettingsInstance = this.settingsRepo.create();
 
@@ -92,23 +92,31 @@ export class UserDevicesService {
         deviceInstance.settings = savedSettings;
 
         await this.userRepo.save(user);
-
-        resolve(await this.userDeviceRepo.save(deviceInstance));
+        await this.userDeviceRepo.save(deviceInstance);
+        resolve({
+          message: `Device ${deviceInstance.device.name} successfully acquired by user ${userPayload.name}`,
+        });
       } catch (error) {
         reject(error);
       }
     });
   }
 
-  async findAll(local: string) {
+  async findAll(local: string): Promise<UserDevice[]> {
     if (local) {
       const userDevices = await this.userDeviceRepo
         .createQueryBuilder('userDevice')
         .leftJoinAndSelect('userDevice.info', 'info')
         .leftJoinAndSelect('userDevice.settings', 'settings')
-        .where('settings.location ILIKE :local', {
-          local: local,
-        })
+        .where(
+          // Eu tinha feito com unaccent() porém o postgres gratuido do render.com não tem a extensão
+          // update: consegui instalar a extensão no render, comando de instalação: 'CREATE EXTENSION IF NOT EXISTS unaccent;'
+          // caso não funcione usar na linha abaixo: 'settings.location ILIKE :local'
+          'unaccent(settings.location) ILIKE unaccent(:local)',
+          {
+            local: local,
+          },
+        )
         .getMany();
       return userDevices;
     }
@@ -119,45 +127,60 @@ export class UserDevicesService {
   }
 
   async getUserDeviceDetails(userId: string, deviceId: string) {
-    const device = await this.userDeviceRepo.findOne({
-      where: { id: deviceId },
-      relations: { settings: true, info: true, user: true },
+    return new Promise(async (resolve, reject) => {
+      try {
+        const device = await this.userDeviceRepo.findOne({
+          where: { id: deviceId },
+          relations: { settings: true, info: true, user: true },
+        });
+
+        if (userId != device.user.id) {
+          throw new Error(`401`);
+        }
+
+        delete device.user;
+
+        resolve(device);
+      } catch (error) {
+        reject(error);
+      }
     });
-
-    if (userId != device.user.id) {
-      throw new UnauthorizedException({
-        description: `Access denied`,
-        cause: `User ${userId} does not own device ${deviceId}, and therefore cannot GET details`,
-      });
-    }
-
-    delete device.user;
-
-    return device;
   }
 
   async findUserDevices(user: User, local: string): Promise<UserDevice[]> {
-    let userDevices: UserDevice[];
-    if (local) {
-      userDevices = await this.userDeviceRepo
-        .createQueryBuilder('userDevice')
-        .leftJoinAndSelect('userDevice.info', 'info')
-        .leftJoinAndSelect('userDevice.settings', 'settings')
-        .where('settings.location ILIKE :local AND userDevice.user = :user', {
-          local: local,
-          user: user,
-        })
-        .getMany();
-    } else {
-      userDevices = await this.userDeviceRepo
-        .createQueryBuilder('userDevice')
-        .leftJoinAndSelect('userDevice.info', 'info')
-        .leftJoinAndSelect('userDevice.settings', 'settings')
-        .where('userDevice.user = :user', { user: user })
-        .getMany();
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        let userDevices: UserDevice[];
+        if (local) {
+          userDevices = await this.userDeviceRepo
+            .createQueryBuilder('userDevice')
+            .leftJoinAndSelect('userDevice.info', 'info')
+            .leftJoinAndSelect('userDevice.settings', 'settings')
+            .where(
+              // caso ocorra erro no unaccent(),
+              // instalar extensão do postgres com o comando: 'CREATE EXTENSION IF NOT EXISTS unaccent;'
+              // ou trocar a linha abaixo por 'settings.location ILIKE :local AND userDevice.user = :user'
+              `unaccent(settings.location) ILIKE unaccent(:local) AND userDevice.user = :user`,
+              {
+                local: local,
+                user: user,
+              },
+            )
+            .getMany();
+        } else {
+          userDevices = await this.userDeviceRepo
+            .createQueryBuilder('userDevice')
+            .leftJoinAndSelect('userDevice.info', 'info')
+            .leftJoinAndSelect('userDevice.settings', 'settings')
+            .where('userDevice.user = :user', { user: user })
+            .getMany();
+        }
 
-    return userDevices;
+        resolve(userDevices);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   updateStatus(
@@ -173,14 +196,11 @@ export class UserDevicesService {
         });
 
         if (!device) {
-          throw new NotFoundException();
+          return device;
         }
 
         if (userId != device.user.id) {
-          throw new UnauthorizedException({
-            description: `Access denied`,
-            cause: `User ${userId} does not own device ${device.id}, and therefore cannot update it`,
-          });
+          throw new Error('401');
         }
 
         device.settings.is_on = setting;

@@ -1,6 +1,6 @@
 export class JwtPayloadUser {
   id: string;
-  fullName: string;
+  name: string;
   email: string;
   photoUrl: string;
 }

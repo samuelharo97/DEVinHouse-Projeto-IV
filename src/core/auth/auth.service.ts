@@ -79,7 +79,7 @@ export class AuthService {
 
         const jwtPayload: JwtPayloadUser = {
           id: user.id,
-          fullName: user.fullName.split(' ')[0],
+          name: user.fullName.split(' ')[0],
           email: user.email,
           photoUrl: user.photoUrl,
         };

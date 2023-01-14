@@ -10,12 +10,17 @@ import {
   Request,
   Query,
   Put,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserDevicesService } from './user-devices.service';
 import { CreateUserDeviceDto } from './dto/create-user-device.dto';
 import { UpdateUserDeviceDto } from './dto/update-user-device.dto';
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import {
+  HttpException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common/exceptions';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/core/auth/auth.service';
 import { UpdateDeviceStatus } from './dto/update-device-status.dto';
@@ -55,25 +60,38 @@ export class UserDevicesController {
     @Query('local') local: string,
   ) {
     this.authService.verifyUser(request.user['id'], userId);
-    return await this.userDevicesService.findUserDevices(
+    const response = await this.userDevicesService.findUserDevices(
       request.user['id'],
       local,
     );
+    if (!response) {
+      throw new NotFoundException(`No user with ID: ${userId}`);
+    }
+    return response;
   }
 
   @Get('/details/:deviceId')
-  async deviceDetails(@Request() request, @Param('deviceId') param: string) {
+  async deviceDetails(@Request() request, @Param('deviceId') deviceId: string) {
     try {
-      const result = await this.userDevicesService.getUserDeviceDetails(
+      const response = await this.userDevicesService.getUserDeviceDetails(
         request.user.id,
-        param,
+        deviceId,
       );
-      if (!result) {
-        throw new BadRequestException();
+      if (!response) {
+        throw new NotFoundException(`No device with ID: ${deviceId}`);
       }
-      return result;
+      return response;
     } catch (error) {
-      return error;
+      if (error.message == '401') {
+        throw new HttpException(
+          `User ${request.user.id} does not own device ${deviceId}, and therefore cannot GET details`,
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+      throw new HttpException(
+        { reason: error?.detail },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -84,13 +102,29 @@ export class UserDevicesController {
     @Body() dto: UpdateDeviceStatus,
   ) {
     try {
-      return await this.userDevicesService.updateStatus(
+      const response = await this.userDevicesService.updateStatus(
         request.user['id'],
         deviceId,
         dto.is_on,
       );
+
+      if (!response) {
+        throw new NotFoundException(`No device with ID: ${deviceId}`);
+      }
+
+      return response;
     } catch (error) {
-      throw error;
+      if (error.message == '401') {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          description: `Access denied`,
+          cause: `User ${request.user['id']} does not own device ${deviceId}, and therefore cannot update it`,
+        });
+      }
+      throw new HttpException(
+        { reason: error?.detail },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
