@@ -14,14 +14,14 @@ export class CreateUserDeviceDto {
   @IsNotEmpty()
   device_id: number;
 
+  @ApiProperty()
   @ValidateNested({ each: true })
   @IsObject()
-  @ApiProperty()
   @Type(() => DeviceSettingsDto)
   settings: DeviceSettingsDto;
 
-  @ValidateNested({ each: true })
   @ApiProperty()
+  @ValidateNested({ each: true })
   @IsOptional()
   @IsObject()
   @Type(() => DeviceInfoDto)

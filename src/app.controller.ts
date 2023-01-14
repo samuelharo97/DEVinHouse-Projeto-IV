@@ -1,6 +1,5 @@
 import {
   Body,
-  Get,
   Controller,
   HttpException,
   HttpStatus,
@@ -25,7 +24,7 @@ export class AppController {
     } catch (error) {
       if (error.code == 23505) {
         throw new HttpException(
-          { reason: error?.detail, code: error?.code },
+          { statusCode: 409, reason: error?.detail, error_code: error?.code },
           HttpStatus.CONFLICT,
         );
       }

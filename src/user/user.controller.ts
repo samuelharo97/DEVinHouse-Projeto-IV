@@ -18,7 +18,6 @@ import { AuthService } from 'src/core/auth/auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
 
 @ApiTags('users')
 @UseGuards(JwtAuthGuard)
@@ -74,10 +73,12 @@ export class UserController {
     @Req() request: Request,
     @Param('id') userId: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  ): Promise<any> {
     try {
       this.authService.verifyUser(request.user['id'], userId);
-      return await this.userService.update(userId, updateUserDto);
+      const response = await this.userService.update(userId, updateUserDto);
+
+      return { message: 'user updated successfully', user: response };
     } catch (error) {
       throw error;
     }
