@@ -1,33 +1,20 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  HttpStatus,
-  UseGuards,
-  Put,
-} from '@nestjs/common';
-import { HttpException } from '@nestjs/common/exceptions';
+import { Controller, Get } from '@nestjs/common';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 import { DeviceService } from './device.service';
-import { CreateDeviceDto } from './dto/create-device.dto';
-import { UpdateDeviceDto } from './dto/update-device.dto';
+
 import { Device } from './entities/device.entity';
 
+//Every ADMIN endpoint is disabled in deployed version
+
 @ApiTags('devices')
-@UseGuards(JwtAuthGuard)
 @Controller('devices')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
-
-  @ApiProperty({ description: 'creates new device' })
+  /*   @ApiProperty({ description: 'creates new device' })
   @Post()
   create(@Body() createDeviceDto: CreateDeviceDto): Promise<Device> {
     return this.deviceService.create(createDeviceDto);
-  }
+  } */
 
   @ApiProperty({ description: 'returns all available devices' })
   @Get()
@@ -40,7 +27,7 @@ export class DeviceController {
     }
   }
 
-  @ApiProperty({ description: 'finds one device by :id' })
+  /*   @ApiProperty({ description: 'finds one device by :id' })
   @Get(':id')
   async findOne(@Param('id') _id: number): Promise<Device> {
     const id = Number(_id);
@@ -69,5 +56,5 @@ export class DeviceController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.deviceService.remove(+id);
-  }
+  } */
 }
