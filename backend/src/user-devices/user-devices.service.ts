@@ -135,6 +135,10 @@ export class UserDevicesService {
           relations: { settings: true, info: true, user: true },
         });
 
+        if (!device) {
+          resolve(null);
+        }
+
         if (userId != device.user.id) {
           throw new Error(`401`);
         }
@@ -197,7 +201,7 @@ export class UserDevicesService {
         });
 
         if (!device) {
-          return device;
+          resolve(null);
         }
 
         if (userId != device.user.id) {
@@ -230,15 +234,13 @@ export class UserDevicesService {
         });
 
         if (!device) {
-          throw new NotFoundException({
-            message: `device id: ${deviceId} not found`,
-          });
+          resolve(null);
         }
 
         const user = await this.userRepo.findOne({ where: { id: userId } });
 
         if (!user) {
-          throw new NotFoundException({ message: 'user not found' });
+          return new NotFoundException({ message: 'user not found' });
         }
 
         device.settings.is_on = is_on;
@@ -267,10 +269,10 @@ export class UserDevicesService {
           relations: { info: true, settings: true, user: true },
         });
 
+        console.log(device);
+
         if (!device) {
-          throw new NotFoundException({
-            message: `device id: ${deviceId} not found`,
-          });
+          resolve(undefined);
         }
 
         if (userId != device.user.id) {

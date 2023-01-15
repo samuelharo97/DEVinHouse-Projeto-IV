@@ -91,10 +91,7 @@ export class UserDevicesController {
           HttpStatus.UNAUTHORIZED,
         );
       }
-      throw new HttpException(
-        { reason: error?.detail },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw error;
     }
   }
 
@@ -124,10 +121,7 @@ export class UserDevicesController {
           cause: `User ${request.user['id']} does not own device ${deviceId}, and therefore cannot update it`,
         });
       }
-      throw new HttpException(
-        { reason: error?.detail },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw error;
     }
   }
 
@@ -138,11 +132,20 @@ export class UserDevicesController {
     @Body() dto: UpdateUserDeviceDto,
   ) {
     try {
-      return await this.userDevicesService.update(
+      const response = await this.userDevicesService.update(
         request.user['id'],
         deviceId,
         dto,
       );
+
+      if (!response) {
+        throw new NotFoundException({
+          statusCode: 404,
+          message: `device id: ${deviceId} not found`,
+        });
+      }
+
+      return response;
     } catch (error) {
       throw error;
     }
@@ -151,9 +154,20 @@ export class UserDevicesController {
   @Delete(':userDeviceId')
   async remove(@Request() request, @Param('userDeviceId') deviceId: string) {
     try {
-      return await this.userDevicesService.remove(deviceId, request.user['id']);
+      const response = await this.userDevicesService.remove(
+        deviceId,
+        request.user['id'],
+      );
+
+      if (!response) {
+        throw new NotFoundException({
+          statusCode: 404,
+          message: `device id: ${deviceId} not found`,
+        });
+      }
+      return response;
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 }
