@@ -48,10 +48,10 @@ export class UserDevicesController {
     return device;
   }
 
-  @Get()
+  /*   @Get()
   findAll(@Query('local') local: string) {
     return this.userDevicesService.findAll(local);
-  }
+  } */
 
   @Get('/:id')
   async findUserDevices(

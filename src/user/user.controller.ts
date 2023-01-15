@@ -28,10 +28,10 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
-  @Get()
+  /* @Get()
   async findAll() {
     return this.userService.findAll();
-  }
+  } */
 
   @Get('/locals')
   locals() {
