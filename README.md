@@ -64,10 +64,9 @@ You can make requests to the deployed version of the API here: [Deploy](https://
 
 # Authentication Endpoints
 
-POST
-/auth/register
-POST
-/auth/login
+POST - /auth/register
+
+POST - /auth/login
 
 
 
