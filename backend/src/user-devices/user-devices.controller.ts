@@ -64,9 +64,7 @@ export class UserDevicesController {
       request.user['id'],
       local,
     );
-    if (!response) {
-      throw new NotFoundException(`No user with ID: ${userId}`);
-    }
+
     return response;
   }
 
