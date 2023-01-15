@@ -34,10 +34,10 @@ export class UserDevicesController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post(':id')
+  @Post(':userId')
   async create(
     @Request() request,
-    @Param('id') userId: string,
+    @Param('userId') userId: string,
     @Body() createUserDeviceDto: CreateUserDeviceDto,
   ) {
     this.authService.verifyUser(request.user['id'], userId);
@@ -53,10 +53,10 @@ export class UserDevicesController {
     return this.userDevicesService.findAll(local);
   }
 
-  @Get('/:id')
+  @Get('/:userId')
   async findUserDevices(
     @Request() request,
-    @Param('id') userId: string,
+    @Param('userId') userId: string,
     @Query('local') local: string,
   ) {
     this.authService.verifyUser(request.user['id'], userId);
@@ -70,8 +70,11 @@ export class UserDevicesController {
     return response;
   }
 
-  @Get('/details/:deviceId')
-  async deviceDetails(@Request() request, @Param('deviceId') deviceId: string) {
+  @Get('/details/:userDeviceId')
+  async deviceDetails(
+    @Request() request,
+    @Param('userDeviceId') deviceId: string,
+  ) {
     try {
       const response = await this.userDevicesService.getUserDeviceDetails(
         request.user.id,
@@ -95,10 +98,10 @@ export class UserDevicesController {
     }
   }
 
-  @Patch(':id')
+  @Patch(':userDeviceId')
   async updateDeviceStatus(
     @Request() request,
-    @Param('id') deviceId: string,
+    @Param('userDeviceId') deviceId: string,
     @Body() dto: UpdateDeviceStatus,
   ) {
     try {
@@ -128,10 +131,10 @@ export class UserDevicesController {
     }
   }
 
-  @Put(':id')
+  @Put(':userDeviceId')
   async updateUserDevice(
     @Request() request,
-    @Param('id') deviceId: string,
+    @Param('userDeviceId') deviceId: string,
     @Body() dto: UpdateUserDeviceDto,
   ) {
     try {
@@ -145,8 +148,8 @@ export class UserDevicesController {
     }
   }
 
-  @Delete(':id')
-  async remove(@Request() request, @Param('id') deviceId: string) {
+  @Delete(':userDeviceId')
+  async remove(@Request() request, @Param('userDeviceId') deviceId: string) {
     try {
       return await this.userDevicesService.remove(deviceId, request.user['id']);
     } catch (error) {

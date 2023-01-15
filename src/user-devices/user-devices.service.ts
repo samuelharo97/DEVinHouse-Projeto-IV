@@ -93,7 +93,6 @@ export class UserDevicesService {
 
         await this.userRepo.save(user);
         await this.userDeviceRepo.save(deviceInstance);
-        console.log(userPayload);
         resolve({
           success: true,
           message: `Device ${deviceInstance.device.name} successfully acquired by user ID: ${userPayload.id}`,

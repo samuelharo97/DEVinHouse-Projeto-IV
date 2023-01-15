@@ -42,10 +42,10 @@ export class UserController {
     }
   }
 
-  @Patch(':id')
+  @Patch(':userId')
   modifyPassword(
     @Req() request: Request,
-    @Param('id') userId: string,
+    @Param('userId') userId: string,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
     try {
@@ -57,8 +57,8 @@ export class UserController {
     }
   }
 
-  @Get('/:id')
-  async findOne(@Req() request: Request, @Param('id') userId: string) {
+  @Get('/:userId')
+  async findOne(@Req() request: Request, @Param('userId') userId: string) {
     try {
       this.authService.verifyUser(request.user['id'], userId);
       const response = await this.userService.findOne(userId);
@@ -68,10 +68,10 @@ export class UserController {
     }
   }
 
-  @Put(':id')
+  @Put(':userId')
   async update(
     @Req() request: Request,
-    @Param('id') userId: string,
+    @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<any> {
     try {
@@ -84,8 +84,8 @@ export class UserController {
     }
   }
 
-  @Patch('/block/:id')
-  block(@Req() request: Request, @Param('id') userId: string) {
+  @Patch('/block/:userId')
+  block(@Req() request: Request, @Param('userId') userId: string) {
     try {
       this.authService.verifyUser(request.user['id'], userId);
       return this.userService.block(userId);
@@ -97,8 +97,8 @@ export class UserController {
     }
   }
 
-  @Patch('/unblock/:id')
-  unblock(@Req() request: Request, @Param('id') userId: string) {
+  @Patch('/unblock/:userId')
+  unblock(@Req() request: Request, @Param('userId') userId: string) {
     try {
       this.authService.verifyUser(request.user['id'], userId);
       return this.userService.unblock(userId);
@@ -110,8 +110,8 @@ export class UserController {
     }
   }
 
-  @Delete('/:id')
-  remove(@Req() request: Request, @Param('id') userId: string) {
+  @Delete('/:userId')
+  remove(@Req() request: Request, @Param('userId') userId: string) {
     try {
       this.authService.verifyUser(request.user['id'], userId);
       return this.userService.remove(userId);
