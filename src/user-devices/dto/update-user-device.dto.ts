@@ -14,15 +14,18 @@ import { Local } from '../enum/location.enum';
 
 export class UpdateUserDeviceDto {
   @ApiProperty()
+  @IsNotEmpty()
   @IsString()
   @Length(3, 15)
   virtual_id: string;
 
   @ApiProperty()
+  @IsNotEmpty()
   @IsIP()
   ip_address: string;
 
   @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
   @Max(100)
   @Min(-100)
