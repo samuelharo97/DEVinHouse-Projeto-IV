@@ -27,7 +27,7 @@ import { UpdateDeviceStatus } from './dto/update-device-status.dto';
 
 @ApiTags('user devices')
 @UseGuards(JwtAuthGuard)
-@Controller('userDevices')
+@Controller('user-devices')
 export class UserDevicesController {
   constructor(
     private readonly userDevicesService: UserDevicesService,
