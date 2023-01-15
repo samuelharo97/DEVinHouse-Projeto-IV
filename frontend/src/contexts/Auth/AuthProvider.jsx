@@ -114,12 +114,12 @@ export const AuthProvider = ({ children }) => {
       }
     };
     try {
-      const res = await axios.put(`${URL}users/${id}`, updatedUser, {
+      await axios.put(`${URL}users/${id}`, updatedUser, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setUser(res.data);
+      setUser(updatedUser);
       toast.success('Perfil atualizado com sucesso!');
     } catch (err) {
       console.error(err);
