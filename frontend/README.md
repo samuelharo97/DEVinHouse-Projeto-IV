@@ -3,10 +3,6 @@
 
 This project is the second big challenge from DEVinHouse course in collaboration with the company Intelbras, where the proposition was to create a web application to manage IOT devices using Vite + React in the given time period of 16 days.
 
-![Current Version](https://img.shields.io/badge/version-v0.1-blue)
-![GitHub contributors](https://img.shields.io/github/contributors/samuelharo97/DEVinHouse-Projeto-II)
-![GitHub stars](https://img.shields.io/github/stars/samuelharo97/DEVinHouse-Projeto-II)
-![GitHub forks](https://img.shields.io/github/samuelharo97/DEVinHouse-Projeto-II)
 
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
