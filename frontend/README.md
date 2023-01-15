@@ -1,5 +1,5 @@
 <!-- prettier-ignore -->
-# DEVinHouse Project II - ConnectLab
+# ConnectLab's Front-End v2
 
 This project is the second big challenge from DEVinHouse course in collaboration with the company Intelbras, where the proposition was to create a web application to manage IOT devices using Vite + React in the given time period of 16 days.
 
