@@ -48,7 +48,7 @@ $ npm run migration:run
 To automatically undo changes run
 
 ```bash
-#undo / revert
+# undo / revert
 $ npm run migration:revert
 ```
 
@@ -62,7 +62,7 @@ You can make requests to the deployed version of the API here: [Deploy](https://
 
 ```bash
 
-Authentication Endpoints
+# Authentication Endpoints
 
 POST
 /auth/register
@@ -70,51 +70,54 @@ POST
 /auth/login
 
 
-Users Endpoits (JWT Protected)
-GET - unavailable in deployed version
-/users
-PATCH
-/users/{userId}
-GET
-/users/{userId}
-PUT
-/users/{userId}
-DELETE
-/users/{userId}
-PATCH
-/users/block/{userId}
-PATCH
-/users/unblock/{userId}
+
+# Users Endpoits (JWT Protected)
+
+GET - unavailable in deployed version - /users
+
+GET - /users/{userId}
+
+PATCH - /users/{userId}
+
+PUT - /users/{userId}
+
+DELETE - /users/{userId}
+
+PATCH - /users/block/{userId}
+
+PATCH - /users/unblock/{userId}
 
 
-Devices Endpoints (JWT Protected)
-POST - unavailable in deployed version
-/devices
-GET
-/devices
-GET
-/devices/{id}
-PUT - unavailable in deployed version
-/devices/{id}
-DELETE - unavailable in deployed version
-/devices/{id}
+
+# Devices Endpoints (JWT Protected)
+
+POST - unavailable in deployed version - /devices
+
+GET - /devices
+
+GET - /devices/{id}
+
+PUT - unavailable in deployed version - /devices/{id}
+
+DELETE - unavailable in deployed version - /devices/{id}
 
 
-User-Device Endpoints (JWT Protected)
-POST
-/user-devices/{userId}
-GET
-/user-devices/{userId}
-GET - unavailable in deployed version
-/user-devices
-GET
-/user-devices/details/{userDeviceId}
-PATCH
-/user-devices/{userDeviceId}
-PUT
-/user-devices/{userDeviceId}
-DELETE
-/user-devices/{userDeviceId}
+
+# User-Device Endpoints (JWT Protected)
+
+POST - /user-devices/{userId}
+
+GET - /user-devices/{userId}
+
+GET - unavailable in deployed version - /user-devices
+
+GET - /user-devices/details/{userDeviceId}
+
+PATCH - /user-devices/{userDeviceId}
+
+PUT - /user-devices/{userDeviceId}
+
+DELETE - /user-devices/{userDeviceId}
 
 ```
 
