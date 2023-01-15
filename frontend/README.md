@@ -8,7 +8,6 @@ This project is the second big challenge from DEVinHouse course in collaboration
 ![GitHub stars](https://img.shields.io/github/stars/samuelharo97/DEVinHouse-Projeto-II)
 ![GitHub forks](https://img.shields.io/github/samuelharo97/DEVinHouse-Projeto-II)
 
-
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
   - [Tools Required](#tools-required)
@@ -23,6 +22,33 @@ This project is the second big challenge from DEVinHouse course in collaboration
 
 - `main` branch contains aggregate code of all branches
 - `development` branch WILL contain code under development
+
+## Prerequisites
+
+- Node.js
+- npm or yarn
+
+## Installation
+
+To install the necessary dependencies, run the following command:
+
+```bash
+$ npm install or yarn install
+```
+
+## Running the Application
+
+To start the development server, run the following command:
+
+```bash
+$ npm run dev or yarn dev
+```
+
+The application will start on http://localhost:5173.
+
+## Components
+
+The application is build using functional components and hooks.
 
 ## ConnectLab files structure
 
@@ -189,7 +215,7 @@ DEVinHouse Projeto II - ConnectLab
 
 - [A text editor or an IDE (like Visual Studio Code)](https://code.visualstudio.com)
 - [Server API made from Node + express](https://github.com/DEVin-Intelbras/connect-lab-server-node)
-- [Vite + React.JS](https://vitejs.dev/) 
+- [Vite + React.JS](https://vitejs.dev/)
 
 ## Development
 
@@ -332,7 +358,6 @@ The development strategy that I decided to go for while reading the projects req
 5. Refactoring: Moved all functions using Axios into a custom hook called useAxios and called them on the required components.
 6. Optimization: Finished styling the project and added toast notifications from react-toastify.
 
-
 ### Deploy
 
 Project was deployed with github + netlify: [ConnectLab](https://connectlab.netlify.app)
@@ -353,4 +378,3 @@ Special thanks to both of them for providing endless guidance and assistance in 
 #### [DEVin[Intelbras]](https://github.com/DEVin-Intelbras)
 
 For providing the node API for the challenge. :)
-
