@@ -5,6 +5,8 @@ import {
   IsOptional,
   IsNumber,
   Matches,
+  Length,
+  IsPositive,
 } from 'class-validator';
 
 export class userAddressDto {
@@ -17,16 +19,19 @@ export class userAddressDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Length(1, 50)
   street: string;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
+  @IsPositive()
   number: number;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Length(1, 30)
   neighborhood: string;
 
   @ApiProperty()
@@ -41,6 +46,7 @@ export class userAddressDto {
 
   @ApiProperty()
   @IsString()
+  @Length(1, 30)
   @IsOptional()
   complement?: string;
 }

@@ -6,12 +6,12 @@ import {
   IsObject,
   IsString,
   MaxLength,
-  MinLength,
   IsNotEmpty,
   ValidateNested,
   IsOptional,
   IsPhoneNumber,
   IsUrl,
+  Length,
 } from 'class-validator';
 import { IsImageUrl } from 'src/core/constraints/url.decorator';
 import { userAddressDto } from './user-address.dto';
@@ -26,8 +26,7 @@ export class UpdateUserDto {
 
   @ApiProperty()
   @IsString()
-  @MinLength(3)
-  @MaxLength(50)
+  @Length(3, 60)
   @IsNotEmpty()
   fullName: string;
 

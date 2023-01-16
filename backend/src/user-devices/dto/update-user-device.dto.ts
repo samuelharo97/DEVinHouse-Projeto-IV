@@ -43,6 +43,8 @@ export class UpdateUserDeviceDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  @IsEnum(Local)
+  @IsEnum(Local, {
+    message: 'location options: "Casa", "Escritório", "Fábrica"',
+  })
   location: Local;
 }
