@@ -59,7 +59,7 @@ export const StyledLink = styled(Link)`
   background-color: ${({ theme }) => theme.COLORS.SECONDARY.MAIN};
   height: 40px;
   border: 0;
-  padding: 0 16px;
+  padding: 12px 16px;
   border-radius: 50px;
   font-style: normal;
   font-weight: 700;
@@ -67,7 +67,7 @@ export const StyledLink = styled(Link)`
   line-height: 18px;
   text-transform: uppercase;
   text-align: center;
-  padding-top: 10px;
+  align-self: center;
 `;
 
 export const FlexibleDiv = styled.div`
