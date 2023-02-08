@@ -12,6 +12,7 @@ export const Formulary = styled.form`
   text-align: center;
 
   label {
+    max-width: 330px;
     text-align: left;
     > span {
       color: red;
