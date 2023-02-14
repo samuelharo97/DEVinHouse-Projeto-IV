@@ -10,8 +10,8 @@ require('dotenv-flow').config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  /* url: process.env.DB_URL,
-  ssl: true, */
+  // url: process.env.DB_URL,
+  // ssl: true,
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT) || 5432,
   username: process.env.DB_USER,
